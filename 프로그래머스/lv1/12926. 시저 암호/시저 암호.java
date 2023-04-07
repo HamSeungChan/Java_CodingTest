@@ -1,10 +1,3 @@
-
-public class Main {
-    public static void main(String[] args) {
-        System.out.println(new Solution().solution("a b Z", 4));
-    }
-}
-
 class Solution {
     public String solution(String s, int n) {
         StringBuffer sb = new StringBuffer();
