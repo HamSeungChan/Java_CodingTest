@@ -1,8 +1,7 @@
 class Solution {
 
-    static int[] dp;
-
-    public int solution(int n) {
+    static int[] dp;    
+public int solution(int n) {
         int answer = 0;
         dp = new int[n + 1];
         return fibonacci(n);
@@ -14,6 +13,6 @@ class Solution {
 
         if (dp[n] != 0) return dp[n];
 
-        return dp[n] = (fibonacci(n - 2) % 1234567 + fibonacci(n - 1) % 1234567) % 1234567;
+        return dp[n] = (fibonacci(n - 2)  + fibonacci(n - 1) ) % 1234567;
     }
 }
