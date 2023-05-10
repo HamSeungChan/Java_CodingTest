@@ -1,33 +1,32 @@
+import java.util.HashMap;
+
 class Solution {
     public int[] solution(String[] keymap, String[] targets) {
         int[] answer = new int[targets.length];
-
-        for (int i = 0; i < targets.length; i++) {
-            int targetClickCount = 0;
-            char[] characters = targets[i].toCharArray();
-            for (char character : characters) {
-                int oneTarget = findKeymap(keymap, character);
-                if (oneTarget == Integer.MAX_VALUE) {
-                    targetClickCount = -1;
-                    break;
+        HashMap<Character, Integer> map = new HashMap<>();
+        for (String key : keymap) {
+            for (int i = 0; i < key.length(); i++) {
+                if (map.containsKey(key.charAt(i))) {
+                    if (map.get(key.charAt(i)) > i + 1) {
+                        map.put(key.charAt(i), i + 1);
+                    }
                 } else {
-                    targetClickCount += oneTarget;
+                    map.put(key.charAt(i), i + 1);
                 }
             }
-            answer[i] = targetClickCount;
+        }
+        
+        for(int i=0; i< targets.length;i++){
+            int count = 0;
+            for(char x : targets[i].toCharArray()){
+                if(!map.containsKey(x)){
+                    count = -1;
+                    break;
+                }
+                count += map.get(x);
+            }
+            answer[i] = count;
         }
         return answer;
-    }
-
-    public int findKeymap(String[] keymaps, char character) {
-        int findCharacterCount = Integer.MAX_VALUE;
-        for (String keymap : keymaps) {
-            for (int i = 0; i < keymap.length(); i++) {
-                if (keymap.charAt(i) == character) {
-                    findCharacterCount = Math.min(findCharacterCount, i + 1);
-                }
-            }
-        }
-        return findCharacterCount;
     }
 }
