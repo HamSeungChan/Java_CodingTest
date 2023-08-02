@@ -1,57 +1,49 @@
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 public class Solution {
-    public static void main(String[] args) {
 
-        Scanner sc = new Scanner(System.in);
+    static final int[] MOVE_X = {0, 1, 0, -1};
+    static final int[] MOVE_Y = {1, 0, -1, 0};
 
-        int testcase = sc.nextInt();
-        for (int test = 1; test <= testcase; test++) {
-            int n = sc.nextInt();
-            int i = 0;
-            int j = 0;
-            int t = 1;
-            int bottom = 0;
 
-            int[][] graph = new int[n][n];
-            int maxLength = n;
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int testCase = Integer.parseInt(br.readLine());
+        for (int t = 1; t <= testCase; t++) {
+            StringBuilder sb = new StringBuilder("#").append(t + "\n");
+            int n = Integer.parseInt(br.readLine());
+            int[][] array = new int[n][n];
+            int[][] check = new int[n][n];
+            int x = 0;
+            int y = 0;
+            int direction = 0;
+            for (int value = 1; value <= n * n; value++) {
+                array[x][y] = value;
+                check[x][y] = 1;
+                int nextMoveX = x + MOVE_X[direction];
+                int nextMoveY = y + MOVE_Y[direction];
 
-            while (t <= n * n) {
-                for (int k = j; k < maxLength; k++) {
-                    graph[i][k] = t;
-                    t++;
-                }
-                j = maxLength - 1;
-
-                for (int k = i + 1; k < maxLength; k++) {
-                    graph[k][j] = t;
-                    t++;
-                }
-                i = maxLength - 1;
-
-                for (int k = j - 1; k >= bottom; k--) {
-                    graph[i][k] = t;
-                    t++;
-                }
-                j = bottom;
-                for (int k = i - 1; k > bottom; k--) {
-                    graph[k][j] = t;
-                    t++;
+                if (nextMoveX < 0 || nextMoveX >= n || nextMoveY < 0 || nextMoveY >= n
+                        || check[nextMoveX][nextMoveY] == 1) {
+                    direction = (direction + 1) % 4;
+                    nextMoveX = x + MOVE_X[direction];
+                    nextMoveY = y + MOVE_Y[direction];
                 }
 
-                maxLength -= 1;
-                bottom++;
-                i = bottom;
-                j = bottom;
+                x = nextMoveX;
+                y = nextMoveY;
             }
-
-            System.out.println("#"+test);
-            for (int k = 0; k < n; k++) {
-                for (int l = 0; l < n; l++) {
-                    System.out.print(graph[k][l] + " ");
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < n; j++) {
+                    sb.append(array[i][j] + " ");
                 }
-                System.out.println();
+                if (i != n - 1) {
+                    sb.append("\n");
+                }
             }
+            System.out.println(sb);
         }
     }
 }
