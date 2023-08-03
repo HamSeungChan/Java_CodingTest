@@ -20,31 +20,18 @@ public class Main {
         for (int i = 0; i < array.length; i++) {
             array[i] = Integer.parseInt(token.nextToken());
         }
-        powerSet(0, new int[n]);
+        powerSet(0, 0, 0);
         System.out.println(answer);
     }
 
-    public static void powerSet(int index, int[] check) {
+    public static void powerSet(int index, int zeroCount, int sum) {
         if (index == n) {
-            int zeroCount = 0;
-            int sum = 0;
-            for (int i = 0; i < check.length; i++) {
-                if (check[i] == 0) {
-                    zeroCount++;
-                }
-                if (check[i] == 1) {
-                    sum += array[i];
-                }
-            }
-            if (zeroCount != check.length && sum == s) {
+            if(zeroCount != n && sum == s){
                 answer++;
             }
-
         } else {
-            check[index] = 1;
-            powerSet(index + 1, check);
-            check[index] = 0;
-            powerSet(index + 1, check);
+            powerSet(index + 1, zeroCount, sum + array[index]);
+            powerSet(index + 1, zeroCount + 1, sum);
         }
     }
 }
