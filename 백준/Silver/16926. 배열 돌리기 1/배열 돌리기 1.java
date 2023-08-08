@@ -47,7 +47,7 @@ public class Main {
 
 			int direction = 0;
 			for (int j = 0; j < findSize; j++) {
-				
+
 				check[startX][startY] = true;
 				d.addLast(array[startX][startY]);
 
@@ -65,22 +65,13 @@ public class Main {
 
 			startY++;
 		}
-		
-		
 
-		for (Deque d : list) {
+		for (Deque<Integer> d : list) {
 			for (int i = 0; i < r; i++) {
 				d.addLast(d.pollFirst());
 			}
 		}
-		
-//		for (Deque d : list) {
-//			while(!d.isEmpty()) {
-//				System.out.println(d.poll());
-//			}
-//			System.out.println();
-//		}
-		
+
 		startX = 0;
 		startY = 0;
 		tmpX = n;
@@ -116,13 +107,16 @@ public class Main {
 
 			startY++;
 		}
-
+		
+		StringBuilder sb = new StringBuilder();
+		
 		for (int i = 0; i < n; i++) {
 			for (int j = 0; j < m; j++) {
-				System.out.print(array[i][j] + " ");
+				sb.append(array[i][j]).append(" ");
 			}
-			System.out.println();
+			sb.append("\n");
 		}
-
+		
+		System.out.println(sb);
 	}
 }
