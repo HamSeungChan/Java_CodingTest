@@ -15,7 +15,7 @@ public class Main {
 		for (int i = 2; i <= n; i++) {
 			for (int j = 0; j < 10; j++) {
 				for (int k = j; k < 10; k++) {
-					dp[i][j] = (dp[i][j] % 10007 +  dp[i - 1][k] % 10007) % 10007 ;
+					dp[i][j] = (dp[i][j] + dp[i - 1][k]) % 10007;
 				}
 			}
 		}
@@ -24,7 +24,7 @@ public class Main {
 
 		for (int i = 0; i < 10; i++) {
 
-			count = (count % 10007 + dp[n][i] % 10007) % 10007;
+			count = (count + dp[n][i]) % 10007;
 
 		}
 
