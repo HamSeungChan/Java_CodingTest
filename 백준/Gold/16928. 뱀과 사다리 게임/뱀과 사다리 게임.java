@@ -48,7 +48,7 @@ public class Main {
 					break;
 				}
 
-				if (map.containsKey(move) ) {
+				if (map.containsKey(move) && check[move] == 0 ) {
 					move = map.get(move);
 					if (check[move] == 0) {
 						check[move] += check[tmp] + 1;
