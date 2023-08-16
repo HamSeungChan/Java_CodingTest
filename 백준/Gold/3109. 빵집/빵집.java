@@ -5,7 +5,7 @@ import java.util.StringTokenizer;
 
 public class Main {
 
-	static String[][] array;
+	static char[][] array;
 	static boolean[][] pipeLine;
 	static int answer, r, c;
 	static boolean flag;
@@ -18,13 +18,13 @@ public class Main {
 		c = Integer.parseInt(token.nextToken());
 
 		pipeLine = new boolean[r][c];
-		array = new String[r][c];
+		array = new char[r][c];
 		answer = 0;
 
 		for (int i = 0; i < r; i++) {
-			String[] tmp = br.readLine().split("");
+			String tmp = br.readLine();
 			for (int j = 0; j < c; j++) {
-				array[i][j] = tmp[j];
+				array[i][j] = tmp.charAt(j);
 			}
 		}
 
@@ -39,7 +39,6 @@ public class Main {
 
 	public static void setPipe(int x, int y) {
 
-		
 		if (y == c - 1) {
 			answer++;
 			flag = true;
@@ -52,15 +51,15 @@ public class Main {
 			if (checkValid(moveX, moveY)) {
 				pipeLine[moveX][moveY] = true;
 				setPipe(moveX, moveY);
-				if(flag) {
+				if (flag) {
 					break;
 				}
-			} 
+			}
 		}
 	}
 
 	public static boolean checkValid(int x, int y) {
-		if (x >= 0 && x < r && !array[x][y].equals("x") && pipeLine[x][y] == false) {
+		if (x >= 0 && x < r && array[x][y] != 'x' && pipeLine[x][y] == false) {
 			return true;
 		}
 		return false;
