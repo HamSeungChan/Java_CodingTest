@@ -84,19 +84,13 @@ public class Main {
 
 	public static int move(int hit) {
 
-		// System.out.println(base);
-
 		if (hit == 4) {
 			int score = Integer.bitCount(base) + 1;
 			base = 0;
 			return score;
 		}
 
-		if (base == 0) {
-			base = base << (hit - 1);
-		} else {
-			base = base << hit;
-		}
+		base = base << hit;
 		int score = Integer.bitCount(base & 56);
 		base = base & 7;
 		base += 1 << (hit - 1);
