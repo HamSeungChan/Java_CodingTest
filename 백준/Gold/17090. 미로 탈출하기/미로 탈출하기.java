@@ -31,22 +31,15 @@ public class Main {
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < m; j++) {
                 if (!check[i][j]) {
-                    dfs(new Point(i, j));
+                    dfs(new Point(i, j),1);
                 }
             }
         }
 
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < m; j++) {
-                if (depth[i][j]) {
-                    answer++;
-                }
-            }
-        }
         System.out.println(answer);
     }
 
-    static boolean dfs(Point p) {
+    static boolean dfs(Point p , int count) {
 
         check[p.x][p.y] = true;
 
@@ -65,6 +58,7 @@ public class Main {
 
         if (isOutRange(mX, mY) || depth[mX][mY]) {
             depth[p.x][p.y] = true;
+            answer+=count;
             return true;
         }
 
@@ -72,7 +66,7 @@ public class Main {
             return false;
         }
 
-        return depth[p.x][p.y] = dfs(new Point(mX, mY));
+        return depth[p.x][p.y] = dfs(new Point(mX, mY) , count +1);
 
     }
 
