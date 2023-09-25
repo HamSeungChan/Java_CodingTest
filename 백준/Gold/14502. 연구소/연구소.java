@@ -1,3 +1,6 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.*;
 
 class Point {
@@ -36,7 +39,7 @@ public class Main {
                 Point p = zero.get(x);
                 newMap[p.x][p.y] = 1;
             }
-         
+
             Queue<Point> q = new LinkedList<>();
             int virusCount = 0;
             for (Point x : virus) {
@@ -65,16 +68,18 @@ public class Main {
         }
     }
 
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        n = sc.nextInt();
-        m = sc.nextInt();
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer token = new StringTokenizer(br.readLine()," ");
+        n = Integer.parseInt(token.nextToken());
+        m = Integer.parseInt(token.nextToken());
         int oneCount = 0;
         graph = new int[n][m];
 
         for (int i = 0; i < n; i++) {
+            token = new StringTokenizer(br.readLine()," ");
             for (int j = 0; j < m; j++) {
-                graph[i][j] = sc.nextInt();
+                graph[i][j] = Integer.parseInt(token.nextToken());
                 if (graph[i][j] == 0) zero.add(new Point(i, j));
                 if (graph[i][j] == 1) oneCount++;
                 if (graph[i][j] == 2) virus.add(new Point(i, j));
