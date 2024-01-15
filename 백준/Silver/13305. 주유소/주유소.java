@@ -22,12 +22,12 @@ public class Main {
             array[i] = Integer.parseInt(token.nextToken());
         }
 
-        int answer = array[0] * distance[0];
+        long answer = (long) array[0] * distance[0];
         int min = array[0];
 
         for (int i = 1; i < distance.length; i++) {
             min = Math.min(min, array[i]);
-            answer += min * distance[i];
+            answer += (long) min * distance[i];
         }
 
         System.out.println(answer);
