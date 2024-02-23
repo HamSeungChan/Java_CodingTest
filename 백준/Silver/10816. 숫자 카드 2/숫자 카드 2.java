@@ -1,44 +1,65 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.*;
+import java.util.Arrays;
+import java.util.StringTokenizer;
 
 public class Main {
-
-    static int[] array;
-
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int n = Integer.parseInt(br.readLine());
 
+        int n = Integer.parseInt(br.readLine());
+        int[] array = new int[n];
 
         StringTokenizer token = new StringTokenizer(br.readLine(), " ");
-        Map<Integer, Integer> map = new HashMap<>();
-
         for (int i = 0; i < n; i++) {
-            int tmp = Integer.parseInt(token.nextToken());
-            map.put(tmp, map.getOrDefault(tmp, 0) + 1);
-        }
-
-        array = new int[map.size()];
-        int index = 0;
-        for (int i : map.keySet()) {
-            array[index] = i;
-            index++;
+            array[i] = Integer.parseInt(token.nextToken());
         }
         Arrays.sort(array);
 
         int m = Integer.parseInt(br.readLine());
-        int[] answer = new int[m];
-        token = new StringTokenizer(br.readLine(), " ");
+        token = new StringTokenizer(br.readLine());
+        StringBuilder sb = new StringBuilder();
         for (int i = 0; i < m; i++) {
-            answer[i] = map.getOrDefault(Integer.parseInt(token.nextToken()), 0);
+            int tmp = Integer.parseInt(token.nextToken());
+            sb.append(upperBound(tmp, array) - lowerBound(tmp, array)).append(" ");
         }
 
-        StringBuilder sb = new StringBuilder();
-        for (int i : answer) {
-            sb.append(i).append(" ");
-        }
         System.out.println(sb);
+    }
+
+
+    // 하향선
+    public static int lowerBound(int key, int[] array) {
+
+        int lo = 0;
+        int hi = array.length;
+
+        while (lo < hi) {
+            int mid = lo + (hi - lo) / 2;
+            if (key <= array[mid]) {
+                hi = mid;
+            } else {
+                lo = mid + 1;
+            }
+        }
+        return lo;
+    }
+
+
+    // 상향선
+    public static int upperBound(int key, int[] array) {
+        int lo = 0;
+        int hi = array.length;
+
+        while (lo < hi) {
+            int mid = lo + (hi - lo) / 2;
+            if (key < array[mid]) {
+                hi = mid;
+            } else {
+                lo = mid + 1;
+            }
+        }
+        return lo;
     }
 }
