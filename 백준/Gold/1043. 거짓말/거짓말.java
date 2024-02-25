@@ -5,67 +5,60 @@ import java.util.StringTokenizer;
 
 public class Main {
 
-	static int[] people;
+    static int[] parent;
 
-	static int find(int n) {
-		if (people[n] == n) {
-			return n;
-		}
+    public static boolean union(int a, int b) {
+        int findA = find(a);
+        int findB = find(b);
 
-		return people[n] = find(people[n]);
-	}
+        if (findA == findB) {
+            return false;
+        }
+        parent[findA] = findB;
+        return true;
+    }
 
-	static boolean union(int a, int b) {
-		int aFind = find(a);
-		int bFind = find(b);
+    public static int find(int value) {
+        if (value == parent[value]) {
+            return value;
+        }
+        return parent[value] = find(parent[value]);
+    }
 
-		if (aFind == bFind) {
-			return false;
-		}
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer token = new StringTokenizer(br.readLine(), " ");
+        int n = Integer.parseInt(token.nextToken());
+        int m = Integer.parseInt(token.nextToken());
 
-		people[bFind] = aFind;
+        parent = new int[n + 1];
+        for (int i = 0; i <= n; i++) {
+            parent[i] = i;
+        }
 
-		return true;
-	}
+        token = new StringTokenizer(br.readLine(), " ");
+        int knowPeopleCount = Integer.parseInt(token.nextToken());
+        for (int i = 0; i < knowPeopleCount; i++) {
+            union(0, Integer.parseInt(token.nextToken()));
+        }
 
-	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer token = new StringTokenizer(br.readLine(), " ");
-		int n = Integer.parseInt(token.nextToken());
-		int m = Integer.parseInt(token.nextToken());
+        int[] firstMember = new int[m];
 
-		people = new int[n + 1];
+        for (int i = 0; i < m; i++) {
+            token = new StringTokenizer(br.readLine(), " ");
+            int peopleCount = Integer.parseInt(token.nextToken());
+            firstMember[i] = Integer.parseInt(token.nextToken());
+            for (int j = 1; j < peopleCount; j++) {
+                union(firstMember[i], Integer.parseInt(token.nextToken()));
+            }
+        }
 
-		for (int i = 0; i <= n; i++) {
-			people[i] = i;
-		}
-
-		token = new StringTokenizer(br.readLine(), " ");
-		int trueKnowPeople = Integer.parseInt(token.nextToken());
-		for (int i = 0; i < trueKnowPeople; i++) {
-			union(0, Integer.parseInt(token.nextToken()));
-		}
-
-		int answer = 0;
-		int[] start = new int[m];
-
-		for (int i = 0; i < m; i++) {
-			token = new StringTokenizer(br.readLine());
-			int peopleCount = Integer.parseInt(token.nextToken());
-			int[] array = new int[peopleCount];
-			for (int j = 0; j < peopleCount; j++) {
-				array[j] = Integer.parseInt(token.nextToken());
-				union(array[0], array[j]);
-			}
-			start[i] = array[0];
-		}
-
-		for (int i : start) {
-			if (find(0) != find(i)) {
-				answer++;
-			}
-		}
-		System.out.println(answer);
-	}
-
+        int answer = 0;
+        for (int i = 0; i < m; i++) {
+            if (find(0) != find(firstMember[i])) {
+                answer++;
+            }
+        }
+        System.out.println(answer);
+    }
 }
