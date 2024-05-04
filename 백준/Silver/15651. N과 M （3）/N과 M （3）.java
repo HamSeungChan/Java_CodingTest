@@ -5,29 +5,31 @@ import java.util.StringTokenizer;
 
 public class Main {
 
-	static int n;
-	static int m;
 	static StringBuilder sb = new StringBuilder();
+	static int n, m;
 
 	public static void main(String[] args) throws IOException {
+
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer token = new StringTokenizer(br.readLine(), " ");
-		n = Integer.valueOf(token.nextToken());
-		m = Integer.valueOf(token.nextToken());
-		permutaion(new int[m], 0);
-		System.out.println(sb.toString());
+
+		n = Integer.parseInt(token.nextToken());
+		m = Integer.parseInt(token.nextToken());
+
+		permutation(0, new int[m]);
+		System.out.print(sb);
 	}
 
-	public static void permutaion(int[] array, int count) {
-		if (count == m) {
-			for (int x : array) {
-				sb.append(x).append(" ");
+	public static void permutation(int index, int[] array) {
+		if (index == m) {
+			for (int i : array) {
+				sb.append(i + 1).append(" ");
 			}
 			sb.append("\n");
 		} else {
-			for (int i = 1; i <= n; i++) {
-				array[count] = i;
-				permutaion(array, count + 1);
+			for (int i = 0; i < n; i++) {
+				array[index] = i;
+				permutation(index + 1, array);
 			}
 		}
 	}
