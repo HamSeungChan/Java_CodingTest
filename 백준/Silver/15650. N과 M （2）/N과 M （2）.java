@@ -1,36 +1,37 @@
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
 
 public class Main {
 
-    static int n;
-    static int m;
-    static int[] array;
+	static StringBuilder sb = new StringBuilder();
+	static int n, m;
 
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        n = sc.nextInt();
-        m = sc.nextInt();
-        int[] nArray = new int[n];
-        for (int i = 0; i < n; i++) {
-            nArray[i] = i + 1;
-        }
-        array = new int[m];
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer token = new StringTokenizer(br.readLine(), " ");
 
-        new Main().DFS(nArray, 0, 0);
-    }
+		n = Integer.parseInt(token.nextToken());
+		m = Integer.parseInt(token.nextToken());
 
-    public void DFS(int[] nArray, int start, int value) {
+		comb(0, 0, new int[m]);
+		System.out.print(sb);
 
-        if (value == m) {
-            for (int x : array) {
-                System.out.print(x + " ");
-            }
-            System.out.println();
-        } else {
-            for (int i = start; i < n; i++) {
-                array[value] = nArray[i];
-                DFS(nArray, i + 1, value + 1);
-            }
-        }
-    }
+	}
+
+	public static void comb(int start, int index, int[] array) {
+
+		if (index == m) {
+			for (int i : array) {
+				sb.append(i + 1).append(" ");
+			}
+			sb.append("\n");
+		} else {
+			for (int i = start; i < n; i++) {
+				array[index] = i;
+				comb(i + 1, index + 1, array);
+			}
+		}
+	}
 }
