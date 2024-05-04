@@ -5,33 +5,35 @@ import java.util.StringTokenizer;
 
 public class Main {
 
-	static int n;
-	static int m;
+	static StringBuilder sb = new StringBuilder();
+	static int n, m;
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer token = new StringTokenizer(br.readLine(), " ");
-		n = Integer.valueOf(token.nextToken());
-		m = Integer.valueOf(token.nextToken());
-		permutaion(new int[m], new int[n], 0);
+
+		n = Integer.parseInt(token.nextToken());
+		m = Integer.parseInt(token.nextToken());
+
+		permutation(new int[m], new boolean[n + 1], 0);
+		System.out.println(sb);
 	}
 
-	public static void permutaion(int[] array, int[] check, int count) {
-		if (count == m) {
-			for (int x : array) {
-				System.out.print((x+1) + " ");
+	public static void permutation(int[] array, boolean[] check, int index) {
+		if (index == m) {
+			for (int i : array) {
+				sb.append(i).append(" ");
 			}
-			System.out.println();
+			sb.append("\n");
 		} else {
-			for (int i = 0; i < n; i++) {
-				if (check[i] != 1) {
-					array[count] = i;
-					check[i] = 1;
-					permutaion(array, check, count + 1);
-					check[i] = 0;
+			for (int i = 1; i <= n; i++) {
+				if (!check[i]) {
+					array[index] = i;
+					check[i] = true;
+					permutation(array, check, index + 1);
+					check[i] = false;
 				}
 			}
 		}
 	}
-
 }
