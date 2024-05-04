@@ -1,41 +1,52 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Arrays;
-import java.util.Scanner;
+import java.util.StringTokenizer;
 
 public class Main {
 
-    static int n;
-    static int m;
-    static int[] array;
-    static int[] check;
+	static int n, m;
+	static int[] array;
+	static StringBuilder sb = new StringBuilder();
 
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        n = sc.nextInt();
-        m = sc.nextInt();
-        array = new int[n];
-        check = new int[n];
-        for (int i = 0; i < n; i++) {
-            array[i] = sc.nextInt();
-        }
-        Arrays.sort(array);
-        new Main().DFS(0, 0, new int[m]);
-    }
+	public static void main(String[] args) throws IOException {
 
-    public void DFS(int value, int start, int[] answer) {
-        if (value == m) {
-            for (int x : answer) {
-                System.out.print(x + " ");
-            }
-            System.out.println();
-        } else {
-            for (int i = 0; i < array.length; i++) {
-                if (check[i] == 0) {
-                    answer[value] = array[i];
-                    check[i] = 1;
-                    DFS(value + 1, i + 1, answer);
-                    check[i] = 0;
-                }
-            }
-        }
-    }
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer token = new StringTokenizer(br.readLine(), " ");
+
+		n = Integer.parseInt(token.nextToken());
+		m = Integer.parseInt(token.nextToken());
+
+		array = new int[n];
+
+		token = new StringTokenizer(br.readLine(), " ");
+		for (int i = 0; i < n; i++) {
+			array[i] = Integer.parseInt(token.nextToken());
+		}
+
+		Arrays.sort(array);
+
+		permutation(0, new boolean[n], new int[m]);
+		System.out.print(sb);
+
+	}
+
+	public static void permutation(int index, boolean[] check, int[] pick) {
+		if (index == m) {
+			for (int i : pick) {
+				sb.append(array[i]).append(" ");
+			}
+			sb.append("\n");
+		} else {
+			for (int i = 0; i < n; i++) {
+				if (!check[i]) {
+					pick[index] = i;
+					check[i] = true;
+					permutation(index + 1, check, pick);
+					check[i] = false;
+				}
+			}
+		}
+	}
 }
