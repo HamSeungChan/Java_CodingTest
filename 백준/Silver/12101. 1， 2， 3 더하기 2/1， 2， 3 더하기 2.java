@@ -41,6 +41,8 @@ public class Main {
 			}
 
 		} else {
+			
+			// 이쪽에 조건을 걸어도 괜찮았음 !!
 			for (int i = 1; i <= 3; i++) {
 				array[index] = i;
 				permutation(index + 1, array, sum + i);
