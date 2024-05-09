@@ -5,8 +5,8 @@ import java.util.StringTokenizer;
 
 public class Main {
 
-	static int n, s, answer = 0;
 	static int[] array;
+	static int n, s, answer = 0;
 
 	public static void main(String[] args) throws IOException {
 
@@ -21,38 +21,23 @@ public class Main {
 		for (int i = 0; i < n; i++) {
 			array[i] = Integer.parseInt(token.nextToken());
 		}
-
-		subset(new boolean[n], 0, 0);
+		subset(0, 0, 0);
 		System.out.println(answer);
 	}
 
-	public static void subset(boolean[] pick, int count, int index) {
+	public static void subset(int index, int pick, int sum) {
+
 		if (index == n) {
-
-			if (count == 0) {
-				return;
-			}
-
-			int sum = 0;
-			for (int i = 0; i < pick.length; i++) {
-				if (pick[i])
-					sum += array[i];
-			}
-
-			if (sum == s) {
+			if (sum == s && pick > 0) {
 				answer++;
 			}
 
 		} else {
+			// 선택하지 않은 경우
+			subset(index + 1, pick, sum);
 
-			// 사용
-			pick[index] = true;
-			subset(pick, count + 1, index + 1);
-
-			// 사용하지 않음
-			pick[index] = false;
-			subset(pick, count, index + 1);
-
+			// 선택한 경우
+			subset(index + 1, pick + 1, sum + array[index]);
 		}
 	}
 }
