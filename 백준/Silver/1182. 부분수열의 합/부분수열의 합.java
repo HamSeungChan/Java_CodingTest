@@ -31,13 +31,13 @@ public class Main {
 			if (sum == s && pick > 0) {
 				answer++;
 			}
-
-		} else {
-			// 선택하지 않은 경우
-			subset(index + 1, pick, sum);
-
-			// 선택한 경우
-			subset(index + 1, pick + 1, sum + array[index]);
+			return;
 		}
+		// 선택하지 않은 경우
+		subset(index + 1, pick, sum);
+
+		// 선택한 경우
+		subset(index + 1, pick + 1, sum + array[index]);
+
 	}
 }
