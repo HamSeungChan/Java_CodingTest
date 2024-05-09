@@ -2,65 +2,75 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.StringTokenizer;
 
 public class Main {
 
+	static boolean[] alphabet = new boolean[26];
+	static int l, c;
 	static String[] s;
-	static Set<String> set;
-	static StringBuilder sb;
+	static StringBuilder sb = new StringBuilder();
 
 	public static void main(String[] args) throws IOException {
+
+		// 모음 다 true로
+		alphabet['a' - 'a'] = true;
+		alphabet['e' - 'a'] = true;
+		alphabet['i' - 'a'] = true;
+		alphabet['o' - 'a'] = true;
+		alphabet['u' - 'a'] = true;
+
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer token = new StringTokenizer(br.readLine());
-		sb = new StringBuilder();
+		StringTokenizer token = new StringTokenizer(br.readLine(), " ");
 
-		// 모음을 set에 담아준다.
-		set = new HashSet<>();
-		set.add("a");
-		set.add("e");
-		set.add("i");
-		set.add("o");
-		set.add("u");
-
-		int l = Integer.parseInt(token.nextToken());
-		int c = Integer.parseInt(token.nextToken());
+		l = Integer.parseInt(token.nextToken());
+		c = Integer.parseInt(token.nextToken());
 
 		s = br.readLine().split(" ");
 		Arrays.sort(s);
-		
-		setPassword(new String[l], 0 ,0);
+
+		subset(0, 0, new boolean[c]);
 		System.out.print(sb);
 	}
 
-	public static void setPassword(String[] tmp, int index, int start) {
-		if (index == tmp.length) {
+	public static void subset(int index, int pick, boolean[] use) {
 
-			int countMoem = 0;
-			int countZaeum = 0;
-			StringBuilder b = new StringBuilder();
+		if (pick == l) {
 
-			for (String s : tmp) {
-				b.append(s);
-				if (set.contains(s)) {
-					countMoem++;
-				} else {
-					countZaeum++;
+			int moeumCount = 0;
+			int jaeumCount = 0;
+
+			for (int i = 0; i < c; i++) {
+				if (use[i]) {
+					// 모음 이라면
+					if (alphabet[s[i].charAt(0) - 'a']) {
+						moeumCount++;
+						continue;
+					}
+					jaeumCount++;
 				}
 			}
 
-			if (countMoem > 0 && countZaeum > 1) {
-				sb.append(b).append("\n");
+			if (moeumCount >= 1 && jaeumCount >= 2) {
+				for (int i = 0; i < use.length; i++) {
+					if (use[i]) {
+						sb.append(s[i].charAt(0));
+					}
+				}
+				sb.append("\n");
 			}
-
-		} else {
-			for (int i = start; i < s.length; i++) {
-				tmp[index] = s[i];
-				setPassword(tmp, index + 1, i + 1);
-			}
+			return;
 		}
-	}
 
+		if (index == c)
+			return;
+
+		// 사용하는 경우
+		use[index] = true;
+		subset(index + 1, pick + 1, use);
+
+		// 사용하지 않는다
+		use[index] = false;
+		subset(index + 1, pick, use);
+	}
 }
