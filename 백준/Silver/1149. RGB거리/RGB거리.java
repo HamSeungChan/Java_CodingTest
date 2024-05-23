@@ -5,73 +5,58 @@ import java.util.StringTokenizer;
 
 public class Main {
 
-    private final static int RGB_COUNT = 3;
+	static int[][] array;
+	static int[][] dp;
+	static int n, answer = Integer.MAX_VALUE;
 
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int n = Integer.parseInt(br.readLine());
-        int[][] allHouse = new int[n][RGB_COUNT];
-        for (int i = 0; i < n; i++) {
-            StringTokenizer st = new StringTokenizer(br.readLine());
-            for (int j = 0; j < RGB_COUNT; j++) {
-                allHouse[i][j] = Integer.parseInt(st.nextToken());
-            }
-        }
+	public static void main(String[] args) throws IOException {
 
-        int[][] dp = new int[n + 1][3];
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        for (int i = 1; i <= n; i++) {
-            dp[i][0] = Math.min(dp[i - 1][1], dp[i - 1][2]) + allHouse[i-1][0];
-            dp[i][1] = Math.min(dp[i - 1][0], dp[i - 1][2]) + allHouse[i-1][1];
-            dp[i][2] = Math.min(dp[i - 1][0], dp[i - 1][1]) + allHouse[i-1][2];
-        }
-        System.out.println(Math.min(Math.min(dp[n][0], dp[n][1]), dp[n][2]));
-    }
+		n = Integer.parseInt(br.readLine());
+		array = new int[n][4];
+		dp = new int[n][4];
+
+		StringTokenizer token;
+		for (int i = 0; i < n; i++) {
+			token = new StringTokenizer(br.readLine(), " ");
+			for (int j = 1; j <= 3; j++) {
+				array[i][j] = Integer.parseInt(token.nextToken());
+			}
+		}
+
+		System.out.println(recursion(0, 0));
+
+	}
+
+	public static int recursion(int index, int before) {
+
+		// SUM 에 값을 누적하고 있다.
+		// RETURN 하려는 값은 SUM 이다.
+		// SUM이랑 ANSWER를 뺀다
+		if (index == n) {
+			return 0;
+		}
+
+		if (dp[index][before] != 0) {
+			return dp[index][before];
+		}
+
+		int ret = 1000000000;
+
+		for (int i = 1; i <= 3; i++) {
+			if (before == i)
+				continue;
+			ret = Math.min(ret, recursion(index + 1, i) + array[index][i]);
+		}
+		return dp[index][before] = ret;
+	}
 }
 
 
-//package baekjoon.b1149;
-//
-//import java.io.BufferedReader;
-//import java.io.IOException;
-//import java.io.InputStreamReader;
-//import java.util.StringTokenizer;
-//
-//public class Main {
-//
-//    private static final int RGB = 3;
-//    static int[][] houseRGB;
-//    static int house;
-//
-//    public static void main(String[] args) throws IOException {
-//        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-//        house = Integer.parseInt(br.readLine());
-//        houseRGB = new int[house][RGB];
-//
-//        for (int i = 0; i < house; i++) {
-//            StringTokenizer st = new StringTokenizer(br.readLine(), " ");
-//            for (int j = 0; j < RGB; j++) {
-//                houseRGB[i][j] = Integer.parseInt(st.nextToken());
-//            }
-//        }
-//        int[] check = new int[RGB];
-//
-//        check[0] = sum(0, 0);
-//        check[1] = sum(1, 0);
-//        check[2] = sum(2, 0);
-//
-//        System.out.println(Math.min(check[2], Math.min(check[0], check[1])));
-//    }
-//
-//    public static int sum(int use, int houseCount) {
-//
-//        if (houseCount == house - 1) {
-//            System.out.println("return");
-//            return houseRGB[houseCount][use];
-//        }
-//
-//        if (use == 0) return houseRGB[houseCount][use] + Math.min(sum(1, houseCount + 1), sum(2, houseCount + 1));
-//        else if (use == 1) return houseRGB[houseCount][use] + Math.min(sum(2, houseCount + 1), sum(0, houseCount + 1));
-//        else return houseRGB[houseCount][use] + Math.min(sum(0, houseCount + 1), sum(1, houseCount + 1));
-//    }
-//}
+/*
+ * 탑다운 dp 짜는 법
+ * 1. 백트래킹을 짠다 / VOID - > RETURN 타입으로
+ * 2. 리턴하는 방식을 바꾼다
+ * 3. 메모이제이션 -> 인자가 2개 임으로 DP 테이블도 2개로 설정
+ * */
