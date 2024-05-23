@@ -1,39 +1,50 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
 import java.util.StringTokenizer;
 
 public class Main {
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer token = new StringTokenizer(br.readLine(), " ");
-        int n = Integer.parseInt(token.nextToken());
-        int k = Integer.parseInt(token.nextToken());
 
-        int[][] dp = new int[n + 1][k + 1];
+	static int n, k;
+	static int[][] array;
+	static int[][] dp;
 
-        Arrays.fill(dp[0], 0);
+	public static void main(String[] args) throws IOException {
 
-        for (int i = 1; i <= n; i++) {
-            token = new StringTokenizer(br.readLine(), " ");
-            int w = Integer.parseInt(token.nextToken());
-            int v = Integer.parseInt(token.nextToken());
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer token = new StringTokenizer(br.readLine(), " ");
 
-            for (int j = 0; j <= k; j++) {
-                if (j == 0) {
-                    dp[i][j] = 0;
-                    continue;
-                }
+		n = Integer.parseInt(token.nextToken());
+		k = Integer.parseInt(token.nextToken());
 
-                if (w > j) {
-                    dp[i][j] = dp[i - 1][j];
-                } else {
-                    dp[i][j] = Math.max(dp[i - 1][j], dp[i - 1][j - w] + v);
-                }
-            }
-        }
+		array = new int[n][2];
+		dp = new int[n][100001];
 
-        System.out.println(dp[n][k]);
-    }
+		for (int i = 0; i < n; i++) {
+			token = new StringTokenizer(br.readLine(), " ");
+			array[i][0] = Integer.parseInt(token.nextToken());
+			array[i][1] = Integer.parseInt(token.nextToken());
+		}
+		System.out.println(recursion(0, 0));
+	}
+
+	// public static void recursion(int index, int weight, int value)
+	public static int recursion(int index, int weight) {
+
+		if (weight > k) {
+			return Integer.MIN_VALUE;
+		}
+
+		if (index == n) {
+			return 0;
+		}
+
+		if (dp[index][weight] > 0) {
+			return dp[index][weight];
+		}
+
+		return dp[index][weight] = Math.max(recursion(index + 1, weight + array[index][0]) + array[index][1],
+			recursion(index + 1, weight));
+	}
+
 }
