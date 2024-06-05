@@ -1,30 +1,30 @@
-
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.StringTokenizer;
 
 public class Main {
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        int n = sc.nextInt();
-        int m = sc.nextInt();
-        int[] a = new int[n];
 
-        for (int i = 0; i < n; i++) {
-            a[i] = sc.nextInt();
+    public static void main(String[] args) throws IOException {
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer token = new StringTokenizer(br.readLine(), " ");
+        int n = Integer.parseInt(token.nextToken());
+        int m = Integer.parseInt(token.nextToken());
+
+        int[] sum = new int[n + 1];
+        Map<Integer, Integer> map = new HashMap<>();
+        map.put(0, 1);
+        int answer = 0;
+        token = new StringTokenizer(br.readLine(), " ");
+        for (int i = 1; i <= n; i++) {
+            sum[i] = sum[i - 1] + Integer.parseInt(token.nextToken());
+            answer += map.getOrDefault(sum[i] - m, 0);
+            map.put(sum[i], map.getOrDefault(sum[i], 0) + 1);
         }
-
-        System.out.println(new Main().solution(a,m));
+        System.out.println(answer);
     }
 
-    public int solution(int[] a, int m) {
-        int answer = 0, lt = 0 , sum = 0;
-        for(int rt =0 ; rt < a.length; rt++){
-            sum += a[rt];
-            if(sum == m) answer++;
-            while(sum>=m){
-                sum -= a[lt++];
-                if(sum == m) answer++;
-            }
-        }
-        return answer;
-    }
 }
