@@ -5,70 +5,38 @@ import java.util.Arrays;
 import java.util.StringTokenizer;
 
 public class Main {
-
-    static int n;
-    static int[] array;
-    static int answer = Integer.MAX_VALUE;
-
     public static void main(String[] args) throws IOException {
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        n = Integer.parseInt(br.readLine());
+        int n = Integer.parseInt(br.readLine());
 
-        array = new int[n];
-        StringTokenizer token = new StringTokenizer(br.readLine());
+        int[] array = new int[n];
+        StringTokenizer token = new StringTokenizer(br.readLine(), " ");
         for (int i = 0; i < n; i++) {
             array[i] = Integer.parseInt(token.nextToken());
         }
         Arrays.sort(array);
-        permutation(0, 0, new boolean[n], 0);
-        System.out.println(answer);
-    }
 
-    public static void permutation(int index, int pickCount, boolean[] pickArray, int height) {
+        int answer = Integer.MAX_VALUE;
+        for (int i = 0; i < n; i++) {
+            for (int j = n - 1; j > i; j--) {
 
-        if (pickCount == 2) {
-
-            int lt = 0;
-            int rt = n - 1;
-
-            while (pickArray[lt]) {
-                lt++;
-            }
-
-            while (pickArray[rt]) {
-                rt--;
-            }
-
-            while (lt < rt) {
-
-                int sum = array[lt] + array[rt];
-                answer = Math.min(answer, Math.abs(sum - height));
-
-                if (height > sum) {
-                    do {
-                        lt++;
-                    } while (pickArray[lt]);
-                } else if (height < sum) {
-                    do {
+                int sum = array[i] + array[j];
+                int lt = i + 1;
+                int rt = j - 1;
+                while (lt < rt) {
+                    int tmp = array[lt] + array[rt];
+                    answer = Math.min(answer, Math.abs(sum - tmp));
+                    if (sum == tmp) {
+                        break;
+                    } else if (sum < tmp) {
                         rt--;
-                    } while (pickArray[rt]);
-                } else {
-                    break;
+                    } else {
+                        lt++;
+                    }
                 }
             }
-            return;
         }
-
-        if (index == n) {
-            return;
-        }
-
-        pickArray[index] = true;
-        permutation(index + 1, pickCount + 1, pickArray, height + array[index]);
-
-        pickArray[index] = false;
-        permutation(index + 1, pickCount, pickArray, height);
+        System.out.println(answer);
     }
-
 }
