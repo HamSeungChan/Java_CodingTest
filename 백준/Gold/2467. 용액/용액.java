@@ -2,41 +2,39 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
-import java.util.Scanner;
 import java.util.StringTokenizer;
 
 public class Main {
-    public static void main(String[] args) throws  NumberFormatException, IOException {
+    public static void main(String[] args) throws IOException {
+
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int answerLt = 0;
-        int answerRt = 0;
         int n = Integer.parseInt(br.readLine());
+
         int[] array = new int[n];
-        StringTokenizer st = new StringTokenizer(br.readLine());
+        StringTokenizer token = new StringTokenizer(br.readLine(), " ");
         for (int i = 0; i < n; i++) {
-            array[i] = Integer.parseInt(st.nextToken());
+            array[i] = Integer.parseInt(token.nextToken());
         }
+        Arrays.sort(array);
+
         int lt = 0;
         int rt = n - 1;
         int answer = Integer.MAX_VALUE;
+        StringBuilder sb = new StringBuilder();
+
         while (lt < rt) {
-
-            int sum = array[lt] + array[rt];
-            int absSum = Math.abs(sum);
-
-            if (answer > absSum) {
-                answerLt = array[lt];
-                answerRt = array[rt];
-                answer = absSum;
+            int tmp = array[lt] + array[rt];
+            if (Math.abs(tmp) < answer) {
+                sb = new StringBuilder(array[lt] + " " + array[rt]);
+                answer = Math.abs(tmp);
             }
-            if (sum > 0) {
+
+            if (Math.abs(array[lt]) < Math.abs(array[rt])) {
                 rt--;
-            } else if (sum < 0) {
-                lt++;
             } else {
-                break;
+                lt++;
             }
         }
-        System.out.println(answerLt+" "+answerRt);
+        System.out.println(sb);
     }
 }
