@@ -1,27 +1,33 @@
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
 
 public class Main {
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        int n = sc.nextInt();
-        int m = sc.nextInt();
+    public static void main(String[] args) throws IOException {
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer token = new StringTokenizer(br.readLine(), " ");
+        int n = Integer.parseInt(token.nextToken());
+        int m = Integer.parseInt(token.nextToken());
+
         int[] array = new int[n];
+        token = new StringTokenizer(br.readLine(), " ");
         for (int i = 0; i < n; i++) {
-            array[i] = sc.nextInt();
+            array[i] = Integer.parseInt(token.nextToken());
         }
-        int lt = 0, sum = 0, answer = Integer.MAX_VALUE;
+
+        int answer = Integer.MAX_VALUE;
+        int sum = 0;
+        int lt = 0;
         for (int rt = 0; rt < n; rt++) {
             sum += array[rt];
-            if (sum >= m) answer = Math.min(rt - lt, answer);
             while (sum >= m) {
+                answer = Math.min(answer, rt - lt + 1);
                 sum -= array[lt++];
-                if (sum >= m) answer = Math.min(rt - lt, answer);
             }
         }
-        if(answer == Integer.MAX_VALUE){
-            System.out.println(0);
-        }
-        else 
-            System.out.println(answer + 1);
+
+        System.out.println(answer == Integer.MAX_VALUE ? 0 : answer);
     }
 }
