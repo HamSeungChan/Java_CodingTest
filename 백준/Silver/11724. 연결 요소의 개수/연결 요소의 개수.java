@@ -1,46 +1,53 @@
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringTokenizer;
 
 public class Main {
 
-    static int[][] graph;
-    static int n;
-    static int[] check;
+    static List<List<Integer>> graph = new ArrayList<>();
 
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        n = sc.nextInt();
-        int m = sc.nextInt();
+    public static void main(String[] args) throws IOException {
 
-        graph = new int[n + 1][n + 1];
-        check = new int[n + 1];
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer token = new StringTokenizer(br.readLine(), " ");
+
+        int n = Integer.parseInt(token.nextToken());
+        int m = Integer.parseInt(token.nextToken());
+
+        for (int i = 0; i <= n; i++) {
+            graph.add(new ArrayList<>());
+        }
 
         for (int i = 0; i < m; i++) {
-            int u = sc.nextInt();
-            int v = sc.nextInt();
-            graph[u][v] = 1;
-            graph[v][u] = 1;
+            token = new StringTokenizer(br.readLine(), " ");
+            int a = Integer.parseInt(token.nextToken());
+            int b = Integer.parseInt(token.nextToken());
+
+            graph.get(a).add(b);
+            graph.get(b).add(a);
         }
-        int answer = 0;
 
+        boolean[] check = new boolean[n + 1];
+        int count = 0;
         for (int i = 1; i <= n; i++) {
-
-            if(check[i] ==0) {
-                answer++;
-                new Main().DFS(i);
+            if (!check[i]) {
+                count++;
+                dfs(i, check);
             }
         }
-        System.out.println(answer);
+        System.out.println(count);
     }
 
-    public void DFS(int u) {
+    public static void dfs(int next, boolean[] check) {
 
-        if(check[u]==1) return;
-
-        check[u] = 1;
-
-        for (int i = 1; i <= n; i++) {
-            if (graph[u][i] == 1) {
-                DFS(i);
+        check[next] = true;
+        List<Integer> list = graph.get(next);
+        for (Integer i : list) {
+            if (!check[i]) {
+                dfs(i, check);
             }
         }
     }
