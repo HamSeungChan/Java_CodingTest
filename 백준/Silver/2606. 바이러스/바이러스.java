@@ -1,38 +1,49 @@
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringTokenizer;
 
 public class Main {
-	static int map[][];
-	static boolean visit[];
-	static int n, m, v;
-	static int count = 0;
-	
-	public static int dfs(int i) {
-		visit[i] = true;
-		
-		for(int j=1; j<=n; j++) {
-			if(map[i][j] == 1 && visit[j] == false) {
-				count ++;
-				dfs(j);
-			}
-		}
-		return count;
-	}
-	
-	public static void main(String[] args) {
-		Scanner scan = new Scanner(System.in);
-		n = scan.nextInt();	// 컴퓨터 수(정점)
-		m = scan.nextInt();	// 연결된 컴퓨터 쌍의 수(간선)
-		v = 1;	// 탐색 시장할 정점의 번호
-		map = new int[n+1][n+1];	// 각 정점간 탐색 경로를 저장할 배열
-		visit = new boolean[n+1];	// 정점의 탐색 여부 체크
-		
-		for(int i=0; i<m; i++) {
-			int a = scan.nextInt();
-			int b = scan.nextInt();
-			map[a][b] = map[b][a]= 1;
-		}
-		
-		System.out.println(dfs(1));
-		scan.close();
-	}
+
+    static List<List<Integer>> graph = new ArrayList<>();
+    static int count = 0;
+
+    public static void main(String[] args) throws IOException {
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+        // 이중 리스트
+        int n = Integer.parseInt(br.readLine());
+        for (int i = 0; i <= n; i++) {
+            graph.add(new ArrayList<>());
+        }
+
+        // 네트워크 연결 정보
+        int k = Integer.parseInt(br.readLine());
+        StringTokenizer token;
+        for (int i = 0; i < k; i++) {
+            token = new StringTokenizer(br.readLine(), " ");
+            int a = Integer.parseInt(token.nextToken());
+            int b = Integer.parseInt(token.nextToken());
+            graph.get(a).add(b);
+            graph.get(b).add(a);
+        }
+        dfs(1, new boolean[n + 1]);
+        System.out.println(count);
+    }
+
+    public static void dfs(int next, boolean[] check) {
+
+        check[next] = true;
+
+        List<Integer> list = graph.get(next);
+        for (Integer i : list) {
+            if (!check[i]) {
+                count++;
+                dfs(i, check);
+            }
+        }
+    }
 }
