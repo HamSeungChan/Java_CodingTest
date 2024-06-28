@@ -1,58 +1,53 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Scanner;
+import java.util.List;
+import java.util.StringTokenizer;
 
 public class Main {
 
-    static int people;
-    static int personA;
-    static int personB;
-    static int graph[][];
-    static int nodeCheck[];
-    static int relationCount = -1;
+    static int n;
+    static List<List<Integer>> graph = new ArrayList<>();
+    static int[] check;
 
+    public static void main(String[] args) throws IOException {
 
-    public static void main(String[] args) {
-
-        Scanner sc = new Scanner(System.in);
-
-        people = sc.nextInt();
-        graph = new int[people + 1][people + 1];
-        nodeCheck = new int[people + 1];
-
-        personA = sc.nextInt();
-        personB = sc.nextInt();
-        int numberOfRelation = sc.nextInt();
-
-        int parents, child = 0;
-
-        for (int i = 0; i < numberOfRelation; i++) {
-            parents = sc.nextInt();
-            child = sc.nextInt();
-            graph[parents][child] = 1;
-            graph[child][parents] = 1;
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        n = Integer.parseInt(br.readLine());
+        check = new int[n + 1];
+        Arrays.fill(check, -1);
+        for (int i = 0; i <= n; i++) {
+            graph.add(new ArrayList<>());
         }
 
-        nodeCheck[personA] = 1;
-        new Main().DFS(personA);
+        StringTokenizer token = new StringTokenizer(br.readLine(), " ");
+        int from = Integer.parseInt(token.nextToken());
+        check[from] = 0;
+        int to = Integer.parseInt(token.nextToken());
 
-        System.out.println(relationCount);
+        int k = Integer.parseInt(br.readLine());
+        for (int i = 0; i < k; i++) {
+            token = new StringTokenizer(br.readLine(), " ");
+            int a = Integer.parseInt(token.nextToken());
+            int b = Integer.parseInt(token.nextToken());
+
+            graph.get(a).add(b);
+            graph.get(b).add(a);
+        }
+        dfs(from);
+        System.out.println(check[to]);
     }
 
-    public void DFS(int n) {
-        if (n == personB) {
-            relationCount = (int)Arrays.stream(nodeCheck)
-                    .filter(i -> i == 1 )
-                    .count() - 1;
-            return;
-        } else {
-            for (int i = 1; i <= people; i++) {
-                if (graph[n][i] == 1 && nodeCheck[i] == 0) {
-                    nodeCheck[i] = 1;
-                    DFS(i);
-                    nodeCheck[i] = 0;
-                }
+    public static void dfs(int now) {
+        List<Integer> list = graph.get(now);
+        for (Integer i : list) {
+            if (check[i] == -1) {
+                check[i] = check[now] + 1;
+                dfs(i);
             }
         }
-    }
 
+    }
 }
