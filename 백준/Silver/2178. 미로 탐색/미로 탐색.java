@@ -1,90 +1,77 @@
-
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.Scanner;
+import java.util.StringTokenizer;
+
+public class Main {
+
+    static int n, m;
+    static int[][] map;
+    static boolean[][] check;
+    static int[] MOVE_X = {1, 0, -1, 0};
+    static int[] MOVE_Y = {0, 1, 0, -1};
+
+    public static void main(String[] args) throws IOException {
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer token = new StringTokenizer(br.readLine(), " ");
+
+        n = Integer.parseInt(token.nextToken());
+        m = Integer.parseInt(token.nextToken());
+        map = new int[n][m];
+        check = new boolean[n][m];
+
+        for (int i = 0; i < n; i++) {
+            String[] tmp = br.readLine().split("");
+            for (int j = 0; j < m; j++) {
+                map[i][j] = Integer.parseInt(tmp[j]);
+            }
+        }
+
+        Queue<Point> q = new LinkedList<>();
+        check[0][0] = true;
+        q.offer(new Point(0, 0));
+
+        int answer = 0;
+        int depth = 1;
+        while (!q.isEmpty()) {
+            int size = q.size();
+            for (int s = 0; s < size; s++) {
+                Point tmp = q.poll();
+
+                // 도착한 경우
+                if (tmp.x == n - 1 && tmp.y == m - 1) {
+                    answer = depth;
+                }
+
+                // 이동
+                for (int i = 0; i < 4; i++) {
+                    int moveX = tmp.x + MOVE_X[i];
+                    int moveY = tmp.y + MOVE_Y[i];
+                    if (canMove(moveX, moveY)) {
+                        check[moveX][moveY] = true;
+                        q.offer(new Point(moveX, moveY));
+                    }
+                }
+            }
+            depth++;
+        }
+        System.out.println(answer);
+    }
+
+    public static boolean canMove(int x, int y) {
+        return 0 <= x && x < n && 0 <= y && y < m && !check[x][y] && map[x][y] == 1;
+    }
+}
 
 class Point {
     int x;
     int y;
 
-    Point(int x, int y) {
+    public Point(int x, int y) {
         this.x = x;
         this.y = y;
-    }
-}
-
-public class Main {
-
-    private static final int[] mX = {1, 0, -1, 0};
-    private static final int[] mY = {0, 1, 0, -1};
-    private static final int mazeStart = 1;
-
-    static int n;
-    static int m;
-    static char[][] graph;
-    static int[][] distance;
-    static char[][] checkGraph;
-    static int answer = Integer.MAX_VALUE;
-
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-
-        n = sc.nextInt();
-        m = sc.nextInt();
-
-        distance = new int[n + 1][m + 1];
-        graph = new char[n + 1][m + 1];
-        checkGraph = new char[n + 1][m + 1];
-
-
-        for (int i = 1; i <= n; i++) {
-            char[] c = sc.next().toCharArray();
-            for (int j = 1; j <= m; j++) {
-                graph[i][j] = c[j - 1];
-            }
-        }
-
-        // 시간초과
-        // new Main().DFS(1, 1, 1);
-        new Main().BFS(mazeStart,mazeStart);
-        System.out.print(distance[n][m]);
-    }
-
-
-    void BFS(int x, int y) {
-        Queue<Point> q = new LinkedList<>();
-        q.offer(new Point(x, y));
-        graph[x][y] = '0';
-        distance[x][y] = 1;
-
-        while (!q.isEmpty()) {
-            Point tmp = q.poll();
-            for (int i = 0; i < mX.length; i++) {
-                int moveX = tmp.x + mX[i];
-                int moveY = tmp.y + mY[i];
-                if (mazeStart <= moveX && moveX <= n && mazeStart <= moveY && moveY <= m && graph[moveX][moveY] == '1') {
-                    q.offer(new Point(moveX, moveY));
-                    graph[moveX][moveY] = '0';
-                    distance[moveX][moveY] = distance[tmp.x][tmp.y] + 1;
-                }
-            }
-        }
-    }
-
-    void DFS(int x, int y, int count) {
-
-        if (count > answer) return;
-
-        if (x == n && y == m) {
-            answer = Math.min(answer, count);
-        } else {
-            for (int i = 0; i < mX.length; i++) {
-                if (graph[x + mX[i]][y + mY[i]] == '1' && checkGraph[x + mX[i]][y + mY[i]] == 0) {
-                    checkGraph[x + mX[i]][y + mY[i]] = 1;
-                    DFS(x + mX[i], y + mY[i], count + 1);
-                    checkGraph[x + mX[i]][y + mY[i]] = 0;
-                }
-            }
-        }
     }
 }
