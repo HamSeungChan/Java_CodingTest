@@ -7,71 +7,69 @@ import java.util.StringTokenizer;
 
 public class Main {
 
-    static int[][] array;
+    static int r, c, answer = 0;
+    static char[][] map;
     static int[] MOVE_X = {1, 0, -1, 0};
     static int[] MOVE_Y = {0, 1, 0, -1};
-    static int n, m;
 
     public static void main(String[] args) throws IOException {
+
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer token = new StringTokenizer(br.readLine(), " ");
+        StringTokenizer token = new StringTokenizer(br.readLine());
 
-        n = Integer.parseInt(token.nextToken());
-        m = Integer.parseInt(token.nextToken());
+        r = Integer.parseInt(token.nextToken());
+        c = Integer.parseInt(token.nextToken());
 
+        map = new char[r][c];
 
-        array = new int[n][m];
-       
+        for (int i = 0; i < r; i++) {
+            map[i] = br.readLine().toCharArray();
+        }
 
-        for (int i = 0; i < n; i++) {
-            char[] tmp = br.readLine().toCharArray();
-            for (int j = 0; j < m; j++) {
-                if (tmp[j] == 'W') {
-                    array[i][j] = 1;
-                } else {
-                    array[i][j] = 0;
+        for (int i = 0; i < r; i++) {
+            for (int j = 0; j < c; j++) {
+                if (map[i][j] == 'L') {
+                    bfs(new Point(i, j));
                 }
             }
         }
-
-        int answer = 0;
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < m; j++) {
-                if(array[i][j] == 0) {
-                    answer = Math.max(answer, bfs(new Point(i,j)));
-                }
-            }
-        }
-
         System.out.println(answer);
     }
-    static int bfs(Point p) {
-    	boolean[][] check = new boolean[n][m];
-        Queue<Point> q = new LinkedList<>();
-        q.offer(p);
-        check[p.x][p.y] = true;
 
-        int distance = 0;
+    public static void bfs(Point startPoint) {
+
+        boolean[][] check = new boolean[r][c];
+
+        Queue<Point> q = new LinkedList<>();
+        q.add(startPoint);
+        check[startPoint.x][startPoint.y] = true;
+        int depth = 0;
+
         while (!q.isEmpty()) {
+
             int size = q.size();
-            for (int i = 0; i < size; i++) {
-                Point tmp = q.poll();
-                for (int j = 0; j < MOVE_X.length; j++) {
-                    int moveX = tmp.x + MOVE_X[j];
-                    int moveY = tmp.y + MOVE_Y[j];
-                    if (isValid(moveX, moveY,check)) {
+            for (int s = 0; s < size; s++) {
+                Point now = q.poll();
+
+                for (int i = 0; i < 4; i++) {
+                    int moveX = now.x + MOVE_X[i];
+                    int moveY = now.y + MOVE_Y[i];
+
+                    if (canMove(moveX, moveY, check)) {
                         check[moveX][moveY] = true;
                         q.offer(new Point(moveX, moveY));
                     }
                 }
             }
-            distance++;
+            depth++;
         }
-        return distance-1;
+        answer = Math.max(answer, depth - 1);
     }
-    public static boolean isValid(int x, int y, boolean [][] check) {
-        return x >= 0 && x < n && y >= 0 && y < m && array[x][y] == 0 && !check[x][y];
+
+    public static boolean canMove(int x, int y, boolean[][] check) {
+        return 0 <= x && x < r && 0 <= y && y < c && !check[x][y] && map[x][y] == 'L';
     }
+
 }
 
 class Point {
