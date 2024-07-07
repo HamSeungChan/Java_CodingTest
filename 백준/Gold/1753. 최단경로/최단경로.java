@@ -1,88 +1,82 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class Main {
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        String[] s = br.readLine().split(" ");
-        int v = Integer.parseInt(s[0]);
-        int e = Integer.parseInt(s[1]);
 
-        int startPoint = Integer.parseInt(br.readLine()) - 1;
-        List<List<Info>> list = new ArrayList<>();
-        for (int i = 0; i < v; i++) {
-            list.add(new ArrayList<>());
+    public static void main(String[] args) throws IOException {
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer token = new StringTokenizer(br.readLine(), " ");
+
+        int v = Integer.parseInt(token.nextToken());
+        int e = Integer.parseInt(token.nextToken());
+        int k = Integer.parseInt(br.readLine());
+
+        List<List<Node>> graph = new ArrayList<>();
+        for (int i = 0; i <= v; i++) {
+            graph.add(new ArrayList<>());
         }
 
 
         for (int i = 0; i < e; i++) {
-            s = br.readLine().split(" ");
-            int a = Integer.parseInt(s[0]) - 1;
-            int b = Integer.parseInt(s[1]) - 1;
-            int weight = Integer.parseInt(s[2]);
-            list.get(a).add(new Info(b, weight));
+            token = new StringTokenizer(br.readLine(), " ");
+
+            int from = Integer.parseInt(token.nextToken());
+            int to = Integer.parseInt(token.nextToken());
+            int value = Integer.parseInt(token.nextToken());
+
+            graph.get(from).add(new Node(to, value));
         }
 
-        int[] answer = new int[v];
-        boolean[] check = new boolean[v];
+        boolean[] check = new boolean[v + 1];
+        int[] answer = new int[v + 1];
         Arrays.fill(answer, Integer.MAX_VALUE);
 
-        answer[startPoint] = 0;
+        Queue<Node> pq = new PriorityQueue<>();
 
+        answer[k] = 0;
+        pq.add(new Node(k, 0));
 
-        for (int i = 0; i < v; i++) {
-            int index = -1;
-            int minValue = Integer.MAX_VALUE;
+        while (!pq.isEmpty()) {
 
-            for (int j = 0; j < v; j++) {
-                if (answer[j] < minValue && !check[j]) {
-                    index = j;
-                    minValue = answer[j];
+            Node now = pq.poll();
+            check[now.to] = true;
+
+            for (Node next : graph.get(now.to)) {
+
+                // 이미 꺼낸 노드라면
+                if (check[next.to]) {
+                    continue;
+                }
+
+                if (answer[next.to] > answer[now.to] + next.value) {
+                    answer[next.to] = answer[now.to] + next.value;
+                    pq.add(new Node(next.to, answer[next.to]));
                 }
             }
-            if (index == -1) {
-                break;
-            }
-
-            check[index] = true;
-
-
-            List<Info> tmp = list.get(index);
-            for (Info x : tmp) {
-                if (!check[x.to] && answer[x.to] > x.weight + minValue) {
-                    answer[x.to] = x.weight + minValue;
-                }
-            }
-
-
         }
 
         StringBuilder sb = new StringBuilder();
-
-        for (int x : answer) {
-            if (x == Integer.MAX_VALUE) {
-                sb.append("INF").append("\n");
-                continue;
-            }
-
-            sb.append(x).append("\n");
-
+        for (int i = 1; i <= v; i++) {
+            sb.append(answer[i] != Integer.MAX_VALUE ? answer[i] : "INF").append("\n");
         }
-
-        System.out.print(sb);
+        System.out.println(sb);
     }
 }
 
-class Info {
+class Node implements Comparable<Node> {
     int to;
-    int weight;
+    int value;
 
-    public Info(int to, int weight) {
+    public Node(int to, int value) {
         this.to = to;
-        this.weight = weight;
+        this.value = value;
+    }
+
+    @Override
+    public int compareTo(Node o) {
+        return this.value - o.value;
     }
 }
