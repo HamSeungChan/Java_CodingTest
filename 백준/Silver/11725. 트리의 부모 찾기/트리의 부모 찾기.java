@@ -7,53 +7,46 @@ import java.util.StringTokenizer;
 
 public class Main {
 
-
-    static List<List<Integer>> list;
-    static int [] array;
-    static boolean [] check;
-
+    static List<List<Integer>> graph = new ArrayList<>();
+    static int[] parent;
 
     public static void main(String[] args) throws IOException {
+
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        list = new ArrayList<>();
         int n = Integer.parseInt(br.readLine());
-
-        array = new int[n];
-        check = new boolean[n];
-
-
-        for (int i = 0; i < n; i++) {
-            list.add(new ArrayList<>());
+        for (int i = 0; i <= n; i++) {
+            graph.add(new ArrayList<>());
         }
+
+        parent = new int[n + 1];
 
         StringTokenizer token;
         for (int i = 0; i < n - 1; i++) {
-            token = new StringTokenizer(br.readLine());
-            int a = Integer.parseInt(token.nextToken())-1;
-            int b = Integer.parseInt(token.nextToken())-1;
-
-            list.get(a).add(b);
-            list.get(b).add(a);
+            token = new StringTokenizer(br.readLine(), " ");
+            int a = Integer.parseInt(token.nextToken());
+            int b = Integer.parseInt(token.nextToken());
+            graph.get(a).add(b);
+            graph.get(b).add(a);
         }
 
-        DFS(0);
+        dfs(1, -1);
 
-        for(int i = 1; i< array.length; i++){
-            System.out.println(array[i] + 1);
+        StringBuilder sb = new StringBuilder();
+        for (int i = 2; i <= n; i++) {
+            sb.append(parent[i]).append("\n");
         }
+        System.out.print(sb);
     }
 
-    public static void DFS(int n){
-        check[n] = true;
+    public static void dfs(int now, int before) {
 
-        for(int i : list.get(n)){
-            if(!check[i]){
-                array[i] = n;
-                DFS(i);
+        List<Integer> list = graph.get(now);
+        for (int child : list) {
+            if (child == before) {
+                continue;
             }
+            parent[child] = now;
+            dfs(child, now);
         }
-
     }
-
-
 }
