@@ -1,3 +1,9 @@
+/*
+ * 트리의 지름은 한 점에서 가장 먼 노드를 구하고,
+ * 그 점에서 또 가장 먼 노드를 구하면 그게 트리의 지름이다.
+ * */
+
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -7,68 +13,77 @@ import java.util.StringTokenizer;
 
 public class Main {
 
-    static int endNodeIndex = 0;
-    static int maxValue = 0;
-    static boolean[] check;
-
-    static List<List<Node>> list = new ArrayList<>();
+    static List<List<Info>> graph = new ArrayList<>();
+    static int[] check;
 
     public static void main(String[] args) throws IOException {
+
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int n = Integer.parseInt(br.readLine());
+
+
         for (int i = 0; i <= n; i++) {
-            list.add(new ArrayList<>());
+            graph.add(new ArrayList<>());
         }
 
+        // 간선 정보 입력
         StringTokenizer token;
         for (int i = 0; i < n - 1; i++) {
-            token = new StringTokenizer(br.readLine());
+            token = new StringTokenizer(br.readLine(), " ");
             int a = Integer.parseInt(token.nextToken());
             int b = Integer.parseInt(token.nextToken());
-            int value = Integer.parseInt(token.nextToken());
+            int c = Integer.parseInt(token.nextToken());
 
-            list.get(a).add(new Node(b, value));
-            list.get(b).add(new Node(a, value));
+            graph.get(a).add(new Info(b, c));
+            graph.get(b).add(new Info(a, c));
         }
 
+        int answer = 0;
+        check = new int[n + 1];
+        dfs(1, -1);
 
-        check = new boolean[n + 1];
-        check[1] = true;
-        dfs(1, 0);
+        int maxIndex = -1;
+        int maxValue = Integer.MIN_VALUE;
 
-
-        check = new boolean[n + 1];
-        maxValue = 0;
-        check[endNodeIndex] = true;
-        dfs(endNodeIndex, 0);
-        
-        System.out.println(maxValue);
-
-    }
-
-    public static void dfs(int from, int value) {
-
-        if (maxValue < value) {
-            maxValue = value;
-            endNodeIndex = from;
-        }
-
-        for (Node node : list.get(from)) {
-            if (check[node.to] == false) {
-                check[node.to] = true;
-                dfs(node.to, value + node.value);
+        for (int i = 1; i <= n; i++) {
+            if (check[i] > maxValue) {
+                maxIndex = i;
+                maxValue = check[i];
             }
         }
+
+        check = new int[n + 1];
+        dfs(maxIndex, -1);
+
+
+        maxValue = Integer.MIN_VALUE;
+        for (int i = 1; i <= n; i++) {
+            if (check[i] > maxValue) {
+                maxValue = check[i];
+            }
+        }
+        System.out.println(maxValue);
     }
 
+    public static void dfs(int now, int before) {
+
+        List<Info> nextList = graph.get(now);
+        for (Info next : nextList) {
+            if (next.to == before) {
+                continue;
+            }
+            check[next.to] = check[now] + next.weight;
+            dfs(next.to, now);
+        }
+    }
 }
 
-class Node {
+class Info {
     int to;
-    int value;
+    int weight;
 
-    public Node(int to, int value) {
+    public Info(int to, int weight) {
         this.to = to;
-        this.value = value;
+        this.weight = weight;
     }
 }
