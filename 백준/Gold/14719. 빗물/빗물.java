@@ -1,59 +1,47 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Queue;
-import java.util.Stack;
 import java.util.StringTokenizer;
 
 public class Main {
     public static void main(String[] args) throws IOException {
+
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer token = new StringTokenizer(br.readLine(), " ");
 
         int h = Integer.parseInt(token.nextToken());
         int w = Integer.parseInt(token.nextToken());
 
+        int[] array = new int[w];
         token = new StringTokenizer(br.readLine(), " ");
-
-        Stack<Integer> stack = new Stack<>();
-        int topValue = 0;
-        int answer = 0;
-
         for (int i = 0; i < w; i++) {
-            int value = Integer.parseInt(token.nextToken());
+            array[i] = Integer.parseInt(token.nextToken());
+        }
 
-            if (stack.isEmpty()) {
-                topValue = value;
-                stack.push(value);
+        int answer = 0;
+        for (int i = 1; i <= h; i++) {
+            int startPoint = -1;
+            int endPoint = -1;
+
+            for (int j = 0; j < w; j++) {
+                if (array[j] >= i) {
+                    if (startPoint == -1) {
+                        startPoint = j;
+                    }
+                    endPoint = j;
+                }
+            }
+            
+            if (startPoint == -1) {
                 continue;
-            } else if (topValue <= value) {
-                while (stack.peek() != topValue) {
-                    answer += topValue - stack.pop();
-                }
-                stack.pop();
-                stack.push(value);
-                topValue = value;
-            } else {
-                stack.push(value);
             }
-        }
-
-        int lastValue = stack.pop();
-
-        if (!stack.isEmpty()) {
-            while (stack.peek() != topValue) {
-                int value = stack.pop();
-                if (lastValue > value) {
-                    answer += lastValue - value;
-                } else {
-                    lastValue = value;
+            
+            for (int j = startPoint; j <= endPoint; j++) {
+                if (array[j] < i) {
+                    answer++;
                 }
             }
         }
-
-
         System.out.println(answer);
-
-
     }
 }
