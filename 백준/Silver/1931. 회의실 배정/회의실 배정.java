@@ -1,26 +1,33 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Scanner;
+import java.util.StringTokenizer;
 
 public class Main {
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
+    public static void main(String[] args) throws IOException {
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int n = Integer.parseInt(br.readLine());
+
         List<Time> list = new ArrayList<>();
-        int n = sc.nextInt();
+        StringTokenizer token;
         for (int i = 0; i < n; i++) {
-            int startTime = sc.nextInt();
-            int endTime = sc.nextInt();
-            list.add(new Time(startTime, endTime));
+            token = new StringTokenizer(br.readLine(), " ");
+            int start = Integer.parseInt(token.nextToken());
+            int end = Integer.parseInt(token.nextToken());
+            list.add(new Time(start, end));
         }
         Collections.sort(list);
-        int lastTime = 0;
+
         int answer = 0;
-        for (Time t : list) {
-           
-            if (t.startTime >= lastTime) {
+        int now = 0;
+        for (Time time : list) {
+            if (time.start >= now) {
                 answer++;
-                lastTime = t.endTime;
+                now = time.end;
             }
         }
         System.out.println(answer);
@@ -29,20 +36,21 @@ public class Main {
 
 class Time implements Comparable<Time> {
 
-    int startTime;
-    int endTime;
 
-    Time(int startTime, int endTime) {
-        this.startTime = startTime;
-        this.endTime = endTime;
+    int start;
+    int end;
+
+    public Time(int start, int end) {
+        this.start = start;
+        this.end = end;
     }
 
     @Override
     public int compareTo(Time o) {
-        if (this.endTime == o.endTime) {
-            return this.startTime - o.startTime;
+
+        if (this.end == o.end) {
+            return this.start - o.start;
         }
-        return this.endTime - o.endTime;
+        return this.end - o.end;
     }
 }
-
