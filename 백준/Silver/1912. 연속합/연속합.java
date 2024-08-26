@@ -8,20 +8,15 @@ public class Main {
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int n = Integer.parseInt(br.readLine());
+        int[] prefixSum = new int[n + 1];
 
-        int[] array = new int[n + 1];
-        int[] dp = new int[n + 1];
+        int answer = Integer.MIN_VALUE;
         StringTokenizer token = new StringTokenizer(br.readLine(), " ");
-
-        for (int i = 1; i < n + 1; i++) {
-            array[i] = Integer.parseInt(token.nextToken());
-        }
-
-        int max = Integer.MIN_VALUE;
         for (int i = 1; i <= n; i++) {
-            dp[i] = Math.max(dp[i - 1] + array[i], array[i]);
-            max = Math.max(max, dp[i]);
+            int value = Integer.parseInt(token.nextToken());
+            prefixSum[i] = Math.max(prefixSum[i - 1] + value, value);
+            answer = Math.max(answer, prefixSum[i]);
         }
-        System.out.println(max);
+        System.out.println(answer);
     }
 }
