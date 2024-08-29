@@ -1,9 +1,6 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayDeque;
-import java.util.Deque;
-import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Main {
@@ -12,54 +9,44 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int q = Integer.parseInt(br.readLine());
 
+        int[] array = new int[q + 1];
+
+        int lt = 0;
+        int rt = 0;
+
         StringTokenizer token;
-
-        int leftSum = 0;
-        int rightSum = 0;
-
-        Queue<Integer> leftQueue = new ArrayDeque<>();
-        Queue<Integer> rightQueue = new ArrayDeque<>();
-
         StringBuilder sb = new StringBuilder();
-
         for (int i = 0; i < q; i++) {
             token = new StringTokenizer(br.readLine(), " ");
-            int questionNumber = Integer.parseInt(token.nextToken());
+            int question = Integer.parseInt(token.nextToken());
 
-            if (questionNumber == 1) {
-                int value = Integer.parseInt(token.nextToken());
-                rightQueue.offer(value);
-                rightSum += value;
-            } else {
 
-                if (leftSum > rightSum) {
-                    sb.append(rightSum).append("\n");
-                    rightSum = leftSum;
-                    leftSum = 0;
-                    rightQueue = leftQueue;
-                    leftQueue = new ArrayDeque<>();
-                } else {
+            // 삽입 명령어
+            if (question == 1) {
+                rt++;
+                array[rt] = array[rt - 1] + Integer.parseInt(token.nextToken());
+            }
+
+            // 비교 명령어
+            else {
+                int mid = (rt + lt) / 2;
+                int leftSum = array[mid] - array[lt];
+                int rightSum = array[rt] - array[mid];
+
+                if (leftSum <= rightSum) {
                     sb.append(leftSum).append("\n");
-                    leftSum = 0;
-                    leftQueue.clear();
+                    lt = mid;
+                } else {
+                    sb.append(rightSum).append("\n");
+                    rt = mid;
                 }
             }
-
-            while (leftQueue.isEmpty() || leftQueue.size() + 1 < rightQueue.size()) {
-                int tmp = rightQueue.poll();
-                leftQueue.offer(tmp);
-                leftSum += tmp;
-                rightSum -= tmp;
-            }
         }
 
-        while (!leftQueue.isEmpty()) {
-            sb.append(leftQueue.poll()).append(" ");
+        for (int i = lt + 1; i <= rt; i++) {
+            sb.append(array[i] - array[i - 1]).append(" ");
         }
 
-        while (!rightQueue.isEmpty()) {
-            sb.append(rightQueue.poll()).append(" ");
-        }
         System.out.println(sb);
     }
 }
