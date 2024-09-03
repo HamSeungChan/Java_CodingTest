@@ -9,32 +9,41 @@ public class Main {
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int n = Integer.parseInt(br.readLine());
-
         int[] array = new int[n];
+
         StringTokenizer token = new StringTokenizer(br.readLine(), " ");
         for (int i = 0; i < n; i++) {
             array[i] = Integer.parseInt(token.nextToken());
         }
-        Arrays.sort(array);
 
         int lt = 0;
         int rt = n - 1;
-        int answer = Integer.MAX_VALUE;
-        StringBuilder sb = new StringBuilder();
+
+        int minValue = Integer.MAX_VALUE;
+        int a = 0;
+        int b = 0;
 
         while (lt < rt) {
-            int tmp = array[lt] + array[rt];
-            if (Math.abs(tmp) < answer) {
-                sb = new StringBuilder(array[lt] + " " + array[rt]);
-                answer = Math.abs(tmp);
+            int value = array[lt] + array[rt];
+            int sum = Math.abs(value);
+
+            if (minValue > sum) {
+                minValue = sum;
+                a = array[lt];
+                b = array[rt];
             }
 
-            if (Math.abs(array[lt]) < Math.abs(array[rt])) {
+            if (value > 0) {
                 rt--;
-            } else {
+            } else if (value < 0) {
                 lt++;
+            } else {
+                break;
             }
         }
-        System.out.println(sb);
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(a).append(" ").append(b);
+        System.out.print(sb);
     }
 }
