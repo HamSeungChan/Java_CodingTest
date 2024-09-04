@@ -5,39 +5,49 @@ import java.util.Arrays;
 import java.util.StringTokenizer;
 
 public class Main {
+
+    static int n;
+    static int[] array;
+
     public static void main(String[] args) throws IOException {
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int n = Integer.parseInt(br.readLine());
-        int[] array = new int[n];
+
+        n = Integer.parseInt(br.readLine());
+        array = new int[n];
+
         StringTokenizer token = new StringTokenizer(br.readLine(), " ");
         for (int i = 0; i < n; i++) {
             array[i] = Integer.parseInt(token.nextToken());
         }
+
         Arrays.sort(array);
 
         int m = Integer.parseInt(br.readLine());
-        StringBuilder sb = new StringBuilder();
         token = new StringTokenizer(br.readLine(), " ");
+        StringBuilder sb = new StringBuilder();
         for (int i = 0; i < m; i++) {
-            int tmp = Integer.parseInt(token.nextToken());
-            int lt = 0;
-            int rt = n - 1;
-            int answer = 0;
-            while (lt <= rt) {
-                int mid = (lt + rt) / 2;
-
-                if (array[mid] > tmp) {
-                    rt = mid - 1;
-                } else if (array[mid] < tmp) {
-                    lt = mid + 1;
-                } else {
-                    answer = 1;
-                    break;
-                }
-            }
-            sb.append(answer).append(" ");
+            int findValue = Integer.parseInt(token.nextToken());
+            sb.append(find(findValue) ? 1 : 0).append(" ");
         }
         System.out.print(sb);
+    }
+
+    public static boolean find(int findValue) {
+
+        int lt = 0;
+        int rt = n - 1;
+
+        while (lt <= rt) {
+            int mid = (lt + rt) / 2;
+            if (array[mid] > findValue) {
+                rt = mid - 1;
+            } else if (array[mid] < findValue) {
+                lt = mid + 1;
+            } else {
+                return true;
+            }
+        }
+        return false;
     }
 }
