@@ -6,74 +6,63 @@ import java.util.StringTokenizer;
 
 public class Main {
 
-    static Point[] p;
+    static int n;
+    static int[][] array;
 
     public static void main(String[] args) throws IOException {
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        n = Integer.parseInt(br.readLine());
 
-        int n = Integer.parseInt(br.readLine());
         StringTokenizer token = new StringTokenizer(br.readLine(), " ");
         int a = Integer.parseInt(token.nextToken());
         int b = Integer.parseInt(token.nextToken());
 
-        p = new Point[n];
+        array = new int[n][2];
         for (int i = 0; i < n; i++) {
             token = new StringTokenizer(br.readLine(), " ");
-            p[i] = new Point(Integer.parseInt(token.nextToken()), Integer.parseInt(token.nextToken()));
+            array[i][0] = Integer.parseInt(token.nextToken());
+            array[i][1] = Integer.parseInt(token.nextToken());
         }
 
-        Arrays.sort(p);
-        int count = 0;
-        for (Point point : p) {
-            Point point1 = new Point(point.x + a, point.y);
-            Point point2 = new Point(point.x, point.y + b);
-            Point point3 = new Point(point.x + a, point.y + b);
+        Arrays.sort(array, (o1, o2) -> {
+            if (o1[0] == o2[0]) {
+                return o1[1] - o2[1];
+            }
+            return o1[0] - o2[0];
+        });
 
-            if (find(point1) && find(point2) && find(point3)) {
-                count++;
+        int answer = 0;
+        for (int i = 0; i < n; i++) {
+
+            int x = array[i][0];
+            int y = array[i][1];
+
+            if (find(x + a, y) && find(x, y + b) && find(x + a, y + b)) {
+                answer++;
             }
         }
-        System.out.println(count);
+        System.out.println(answer);
     }
 
-    public static boolean find(Point tmp) {
+    public static boolean find(int x, int y) {
 
         int lt = 0;
-        int rt = p.length - 1;
-
+        int rt = n - 1;
         while (lt <= rt) {
-            int mid = (lt + rt) / 2;
-            if (p[mid].x < tmp.x || (p[mid].x == tmp.x && p[mid].y < tmp.y)) {
-                lt = mid + 1;
-            } else {
-                rt = mid - 1;
-            }
 
-            if (p[mid].x == tmp.x && p[mid].y == tmp.y) {
+            int mid = (lt + rt) / 2;
+            int nowX = array[mid][0];
+            int nowY = array[mid][1];
+
+            if (nowX < x || (nowX == x && nowY < y)) {
+                lt = mid + 1;
+            } else if (nowX > x || nowY > y) {
+                rt = mid - 1;
+            } else {
                 return true;
             }
         }
         return false;
-    }
-
-}
-
-class Point implements Comparable<Point> {
-    int x;
-    int y;
-
-
-    public Point(int x, int y) {
-        this.x = x;
-        this.y = y;
-    }
-
-    @Override
-    public int compareTo(Point o) {
-        if (this.x == o.x) {
-            return this.y - o.y;
-        }
-        return this.x - o.x;
     }
 }
