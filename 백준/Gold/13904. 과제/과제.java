@@ -2,23 +2,16 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
+import java.util.Comparator;
+import java.util.PriorityQueue;
 import java.util.StringTokenizer;
 
 public class Main {
-
-    static int n;
-    static int[][] array, dp;
-
     public static void main(String[] args) throws IOException {
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        n = Integer.parseInt(br.readLine());
-        array = new int[n][2];
-        dp = new int[1001][1001];
-
-        for (int i = 0; i < dp.length; i++) {
-            Arrays.fill(dp[i], -1);
-        }
+        int n = Integer.parseInt(br.readLine());
+        int[][] array = new int[n][2];
 
         StringTokenizer token;
         for (int i = 0; i < n; i++) {
@@ -28,30 +21,31 @@ public class Main {
             }
         }
 
-        Arrays.sort(array, (o1, o2) -> o1[0] - o2[0]);
-        System.out.println(recursion(0, 0));
-    }
+        Arrays.sort(array, new Comparator<int[]>() {
+            @Override
+            public int compare(int[] o1, int[] o2) {
+                return o1[0] - o2[0];
+            }
+        });
 
+        PriorityQueue<Integer> pq = new PriorityQueue<>();
 
-    public static int recursion(int day, int index) {
-
-        if (dp[day][index] != -1) {
-            return dp[day][index];
+        for (int i = 0; i < n; i++) {
+            if (pq.size() < array[i][0]) {
+                pq.add(array[i][1]);
+            } else {
+                if (pq.peek() < array[i][1]) {
+                    pq.poll();
+                    pq.add(array[i][1]);
+                }
+            }
         }
 
-        if (index == n) {
-            return 0;
+        int answer = 0;
+        while (!pq.isEmpty()) {
+            answer += pq.poll();
         }
+        System.out.println(answer);
 
-        int maxValue = Integer.MIN_VALUE;
-
-        // 선택
-        if (day < array[index][0]) {
-            maxValue = Math.max(maxValue, recursion(day + 1, index + 1) + array[index][1]);
-        }
-        // 안선택
-        maxValue = Math.max(maxValue, recursion(day, index + 1));
-
-        return dp[day][index] = maxValue;
     }
 }
