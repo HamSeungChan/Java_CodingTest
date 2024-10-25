@@ -8,6 +8,7 @@ import java.util.StringTokenizer;
 public class Main {
 
     static List<List<Integer>> graph = new ArrayList<>();
+    static boolean[] check;
 
     public static void main(String[] args) throws IOException {
 
@@ -15,6 +16,7 @@ public class Main {
         StringTokenizer token = new StringTokenizer(br.readLine(), " ");
 
         int n = Integer.parseInt(token.nextToken());
+        check = new boolean[n + 1];
         int m = Integer.parseInt(token.nextToken());
 
         for (int i = 0; i <= n; i++) {
@@ -30,24 +32,23 @@ public class Main {
             graph.get(b).add(a);
         }
 
-        boolean[] check = new boolean[n + 1];
-        int count = 0;
+        int answer = 0;
         for (int i = 1; i <= n; i++) {
             if (!check[i]) {
-                count++;
-                dfs(i, check);
+                answer++;
+                dfs(i);
             }
         }
-        System.out.println(count);
+
+        System.out.println(answer);
     }
 
-    public static void dfs(int next, boolean[] check) {
+    public static void dfs(int index) {
 
-        check[next] = true;
-        List<Integer> list = graph.get(next);
-        for (Integer i : list) {
-            if (!check[i]) {
-                dfs(i, check);
+        for (Integer next : graph.get(index)) {
+            if (!check[next]) {
+                check[next] = true;
+                dfs(next);
             }
         }
     }
