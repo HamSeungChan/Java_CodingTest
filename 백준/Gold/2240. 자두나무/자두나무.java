@@ -29,9 +29,11 @@ public class Main {
                 Arrays.fill(dp[i][j], -1);
             }
         }
+
         System.out.println(recursion(0, 0, 1));
     }
 
+    // index -> 시간
     public static int recursion(int index, int moveCount, int now) {
 
         if (dp[index][moveCount][now] != -1) {
@@ -43,18 +45,21 @@ public class Main {
         }
 
         int max = 0;
+
+
         // 움직인다
         if (moveCount < w) {
 
             int newNow = now == 1 ? 2 : 1;
-            max = Math.max(recursion(index + 1, moveCount + 1,
-                    newNow) + (array[index] == newNow ? 1 : 0), max);
+            max = Math.max(max, recursion(index + 1, moveCount + 1, newNow) // 다음 행동
+                    + (array[index] == newNow ? 1 : 0)); // 지금행동
+
         }
 
         // 움직이지 않는다
-        max = Math.max(max, recursion(index + 1, moveCount,
-                now) + (array[index] == now ? 1 : 0));
+        max = Math.max(recursion(index + 1, moveCount, now) + (array[index] == now ? 1 : 0), max);
 
         return dp[index][moveCount][now] = max;
+//        return max;
     }
 }
