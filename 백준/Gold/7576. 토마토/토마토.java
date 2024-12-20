@@ -1,81 +1,81 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.Scanner;
-
-class Point {
-    int x, y;
-
-    Point(int x, int y) {
-        this.x = x;
-        this.y = y;
-    }
-}
+import java.util.StringTokenizer;
 
 public class Main {
 
-    private static final int[] moveDirectionX = {1, 0, -1, 0};
-    private static final int[] moveDirectionY = {0, 1, 0, -1};
-    private static final int numberDirectionMovement = 4;
+    static int n, m;
+    static int[][] map;
+    static int[][] check;
+    static int[] MOVE_X = {1, 0, -1, 0};
+    static int[] MOVE_Y = {0, -1, 0, 1};
 
-    static int n;
-    static int m;
-    static int[][] graph;
-    static int[][] distance;
-    static Queue<Point> q = new LinkedList<>();
+    public static void main(String[] args) throws IOException {
 
-    public void BFS() {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer token = new StringTokenizer(br.readLine(), " ");
 
+        m = Integer.parseInt(token.nextToken());
+        n = Integer.parseInt(token.nextToken());
+
+
+        Queue<Point> q = new LinkedList<>();
+        map = new int[n][m];
+        check = new int[n][m];
+
+        for (int i = 0; i < n; i++) {
+            token = new StringTokenizer(br.readLine(), " ");
+            for (int j = 0; j < m; j++) {
+                map[i][j] = Integer.parseInt(token.nextToken());
+                if (map[i][j] == 1) {
+                    q.offer(new Point(i, j));
+                    check[i][j] = 0;
+                }
+            }
+        }
 
         while (!q.isEmpty()) {
             Point tmp = q.poll();
-            for (int i = 0; i < numberDirectionMovement; i++) {
-                int mX = tmp.x + moveDirectionX[i];
-                int mY = tmp.y + moveDirectionY[i];
-                if (0 <= mX && mX < n && 0 <= mY && mY < m && graph[mX][mY] == 0) {
-                    distance[mX][mY] = distance[tmp.x][tmp.y] + 1;
-                    graph[mX][mY] = 1;
-                    q.offer(new Point(mX, mY));
+            for (int i = 0; i < 4; i++) {
+                int moveX = tmp.x + MOVE_X[i];
+                int moveY = tmp.y + MOVE_Y[i];
+                if (canMove(moveX, moveY)) {
+                    check[moveX][moveY] = check[tmp.x][tmp.y] + 1;
+                    map[moveX][moveY] = 1;
+                    q.offer(new Point(moveX, moveY));
                 }
             }
         }
+
+        int answer = 0;
+        boolean flag = false;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+
+                // 아직 토마토가 남은 경우
+                if (map[i][j] == 0) {
+                    flag = true;
+                }
+                answer = Math.max(answer, check[i][j]);
+            }
+        }
+        System.out.println(!flag ? answer : -1);
     }
 
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
+    public static boolean canMove(int x, int y) {
+        return 0 <= x && x < n && 0 <= y && y < m && map[x][y] == 0;
+    }
+}
 
-        m = sc.nextInt();
-        n = sc.nextInt();
+class Point {
+    int x;
+    int y;
 
-        graph = new int[n][m];
-        distance = new int[n][m];
-
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < m; j++) {
-                graph[i][j] = sc.nextInt();
-                if (graph[i][j] == 1) {
-                    q.offer(new Point(i, j));
-                }
-            }
-        }
-
-        new Main().BFS();
-        boolean flag = true;
-        int answer = 0;
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < m; j++) {
-                if (graph[i][j] == 0) flag = false;
-            }
-        }
-
-        if (flag) {
-            for (int i = 0; i < n; i++) {
-                for (int j = 0; j < m; j++) {
-                    answer = Math.max(distance[i][j], answer);
-                }
-            }
-            System.out.println(answer);
-        } else {
-            System.out.println(-1);
-        }
+    public Point(int x, int y) {
+        this.x = x;
+        this.y = y;
     }
 }
