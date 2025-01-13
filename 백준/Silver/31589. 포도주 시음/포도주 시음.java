@@ -30,7 +30,7 @@ public class Main {
 
         // 가장 맛있는 포도주는 마신 상태
         int lt = -1;
-        int rt = n - 2;
+        int rt = n - 1;
         int drinkCount = 1;
         long answer = array[n - 1];
         boolean flag = true;
@@ -39,8 +39,8 @@ public class Main {
 
             // 맛있는 포도주를 마신다.
             if (!flag) {
-                answer += array[rt] - array[lt];
                 rt--;
+                answer += array[rt] - array[lt];
                 flag = true;
             }
             // 맛없는 포도주를 마신다.
