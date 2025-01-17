@@ -1,40 +1,43 @@
 import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 public class Main {
 
-    public static long C;
+    static long a, b, c;
+    static int[] check;
 
     public static void main(String[] args) throws IOException {
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer token = new StringTokenizer(br.readLine(), " ");
 
-        StringTokenizer st = new StringTokenizer(br.readLine(), " ");
+        a = Long.parseLong(token.nextToken());
+        b = Long.parseLong(token.nextToken());
+        c = Long.parseLong(token.nextToken());
 
-        long A = Long.parseLong(st.nextToken());
-        long B = Long.parseLong(st.nextToken());
-        C = Long.parseLong(st.nextToken());
+//        check = new int[b + 1];
 
-        System.out.println(pow(A, B));
+        System.out.println(recursion(b) % c);
     }
 
+    public static long recursion(long now) {
 
-    public static long pow(long A, long exponent) {
+//        if (check[now] != 0) {
+//            return check[now];
+//        }
 
-
-        if(exponent == 1) {
-            return A % C;
+        if (now == 1) {
+            return a % c;
         }
 
+        long value = recursion(now / 2);
 
-        long temp = pow(A, exponent / 2);
-        if(exponent % 2 == 1) {
-            return (temp * temp % C) * A % C;
+        if (now % 2 == 0) {
+            return value * value % c;
+        } else {
+            return (value * value % c) * a % c;
         }
-        return temp * temp % C;
-
     }
-
 }
