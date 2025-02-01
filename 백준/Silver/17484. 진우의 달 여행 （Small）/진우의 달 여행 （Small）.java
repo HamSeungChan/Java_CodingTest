@@ -1,6 +1,7 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.StringTokenizer;
 
 public class Main {
@@ -8,6 +9,7 @@ public class Main {
     static int n, m, answer = Integer.MAX_VALUE;
     static int[][] array;
     static int[] MOVE_Y = {1, 0, -1};
+    static int[][][] dp;
 
     public static void main(String[] args) throws IOException {
 
@@ -18,6 +20,13 @@ public class Main {
         m = Integer.parseInt(token.nextToken());
 
         array = new int[n][m];
+        dp = new int[n][m][4];
+
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                Arrays.fill(dp[i][j], -1);
+            }
+        }
 
         for (int i = 0; i < n; i++) {
             token = new StringTokenizer(br.readLine(), " ");
@@ -26,20 +35,26 @@ public class Main {
             }
         }
 
+        int minValue = Integer.MAX_VALUE;
         for (int i = 0; i < m; i++) {
-            recursion(0, i, -1, array[0][i]);
+            minValue = Math.min(minValue, recursion(0, i, 3) + array[0][i]);
         }
 
-        System.out.println(answer);
+        System.out.println(minValue);
     }
 
-    public static void recursion(int x, int y, int beforeMove, int sum) {
+    public static int recursion(int x, int y, int beforeMove) {
+
+        if (dp[x][y][beforeMove] != -1) {
+            return dp[x][y][beforeMove];
+        }
 
         // 달에 도착했을 때
         if (x == n - 1) {
-            answer = Math.min(answer, sum);
-            return;
+            return 0;
         }
+
+        int minValue = Integer.MAX_VALUE;
 
         for (int i = 0; i < MOVE_Y.length; i++) {
 
@@ -51,10 +66,11 @@ public class Main {
             int moveY = y + MOVE_Y[i];
 
             if (checkRange(moveY)) {
-                recursion(moveX, moveY, i, sum + array[moveX][moveY]);
+                minValue = Math.min(minValue, recursion(moveX, moveY, i) + array[moveX][moveY]);
             }
         }
 
+        return minValue;
     }
 
     public static boolean checkRange(int y) {
