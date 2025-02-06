@@ -14,39 +14,42 @@ public class Main {
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int n = Integer.parseInt(br.readLine());
+
+        parent = new int[n + 1];
         for (int i = 0; i <= n; i++) {
             graph.add(new ArrayList<>());
         }
-
-        parent = new int[n + 1];
 
         StringTokenizer token;
         for (int i = 0; i < n - 1; i++) {
             token = new StringTokenizer(br.readLine(), " ");
             int a = Integer.parseInt(token.nextToken());
             int b = Integer.parseInt(token.nextToken());
+
             graph.get(a).add(b);
             graph.get(b).add(a);
         }
 
-        dfs(1, -1);
-
         StringBuilder sb = new StringBuilder();
+        dfs(-1, 1);
+
         for (int i = 2; i <= n; i++) {
             sb.append(parent[i]).append("\n");
         }
         System.out.print(sb);
     }
 
-    public static void dfs(int now, int before) {
+    public static void dfs(int before, int now) {
 
-        List<Integer> list = graph.get(now);
-        for (int child : list) {
-            if (child == before) {
+        for (Integer next : graph.get(now)) {
+            if (next == before) {
                 continue;
             }
-            parent[child] = now;
-            dfs(child, now);
+
+            parent[next] = now;
+
+            dfs(now, next);
         }
     }
+
 }
