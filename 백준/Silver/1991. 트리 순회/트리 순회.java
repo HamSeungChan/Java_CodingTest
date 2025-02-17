@@ -1,94 +1,105 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.StringTokenizer;
+import java.util.HashMap;
+import java.util.Map;
 
-class Tree {
+public class Main {
+    public static void main(String[] args) throws IOException {
 
-    public Node root;
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int n = Integer.parseInt(br.readLine());
+        Map<String, Node> map = new HashMap<>();
 
-    public void createNode(char data, char leftData, char rightData) {
+        Node root = new Node("A");
+        map.put("A", root);
 
-        if (root == null) {
-            root = new Node(data);
-            root.left = leftData != '.' ? new Node(leftData) : null;
-            root.right = rightData != '.' ? new Node(rightData) : null;
-        } else {
-            searchNode(root, data, leftData, rightData);
+        for (int i = 0; i < n; i++) {
+            String[] split = br.readLine().split(" ");
+
+            String parent = split[0];
+
+            Node node = map.get(parent);
+
+            String leftTmp = split[1];
+            String rightTmp = split[2];
+
+            if (!leftTmp.equals(".")) {
+                Node left = new Node(split[1]);
+                map.put(split[1], left);
+                node.setLeftNode(left);
+            }
+
+            if (!rightTmp.equals(".")) {
+                Node right = new Node(split[2]);
+                map.put(split[2], right);
+                node.setRightNode(right);
+            }
         }
 
+        StringBuilder sb = new StringBuilder();
+        preorder(root, sb);
+        sb.append("\n");
+
+        inorder(root, sb);
+        sb.append("\n");
+
+        postorder(root, sb);
+        System.out.print(sb);
     }
 
-    public void searchNode(Node node, char data, char leftData, char rightData) {
+    public static void preorder(Node parent, StringBuilder sb) {
 
-        if (node == null) {
+        if (parent == null) {
             return;
-        } else if (node.data == data) {
-            node.left = leftData != '.' ? new Node(leftData) : null;
-            node.right = rightData != '.' ? new Node(rightData) : null;
-        } else {
-            searchNode(node.left, data, leftData, rightData);
-            searchNode(node.right, data, leftData, rightData);
         }
+
+        sb.append(parent.tmp);
+        preorder(parent.leftNode, sb);
+        preorder(parent.rightNode, sb);
+
     }
 
-    public void preOrder(Node node) {
-        if (node != null) {
-            System.out.print(node.data);
-            preOrder(node.left);
-            preOrder(node.right);
+    public static void inorder(Node parent, StringBuilder sb) {
+
+        if (parent == null) {
+            return;
         }
+
+        inorder(parent.leftNode, sb);
+        sb.append(parent.tmp);
+        inorder(parent.rightNode, sb);
     }
 
-    public void inOrder(Node node) {
-        if (node != null) {
-            inOrder(node.left);
-            System.out.print(node.data);
-            inOrder(node.right);
-        }
-    }
+    public static void postorder(Node parent, StringBuilder sb) {
 
-    public void postOrder(Node node) {
-        if (node != null) {
-            postOrder(node.left);
-            postOrder(node.right);
-            System.out.print(node.data);
+        if (parent == null) {
+            return;
         }
+
+        postorder(parent.leftNode, sb);
+        postorder(parent.rightNode, sb);
+        sb.append(parent.tmp);
+
     }
 
 }
 
 class Node {
-    char data;
-    Node left;
-    Node right;
 
-    Node(char data) {
-        this.data = data;
+    String tmp;
+    Node leftNode;
+    Node rightNode;
+
+    public Node(String tmp) {
+        this.tmp = tmp;
     }
-}
 
+    public void setLeftNode(Node node) {
+        leftNode = node;
+    }
 
-public class Main {
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        Tree t = new Tree();
-        int n = Integer.parseInt(br.readLine());
-
-        StringTokenizer token;
-        for (int i = 0; i < n; i++) {
-            token = new StringTokenizer(br.readLine(), " ");
-            char data = token.nextToken().charAt(0);
-            char leftData = token.nextToken().charAt(0);
-            char rightData = token.nextToken().charAt(0);
-
-            t.createNode(data, leftData, rightData);
-        }
-
-        t.preOrder(t.root);
-        System.out.println();
-        t.inOrder(t.root);
-        System.out.println();
-        t.postOrder(t.root);
+    public void setRightNode(Node node) {
+        rightNode = node;
     }
 }
