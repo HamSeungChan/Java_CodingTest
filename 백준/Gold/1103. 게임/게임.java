@@ -61,17 +61,16 @@ public class Main {
         int maxValue = 1;
 
         int value = array[x][y];
+        route[x][y] = true;
         for (int i = 0; i < 4; i++) {
             int moveX = x + MOVE_X[i] * value;
             int moveY = y + MOVE_Y[i] * value;
 
             if (checkRange(moveX, moveY)) {
-                route[x][y] = true;
                 maxValue = Math.max(maxValue, recursion(moveX, moveY) + 1);
-                route[x][y] = false;
             }
         }
-
+        route[x][y] = false;
         return check[x][y] = maxValue;
     }
 
