@@ -1,25 +1,49 @@
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
+
 public class Main {
-    static int[] check;
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        int n = sc.nextInt();
-        int[] array = new int[n];
-        int[] dp = new int[n];
-        check = new int[n];
+
+    static int n;
+    static int[] array;
+    static int[][] dp;
+
+    public static void main(String[] args) throws IOException {
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        n = Integer.parseInt(br.readLine());
+        array = new int[n];
+        dp = new int[n + 1][1001];
+
+        StringTokenizer token = new StringTokenizer(br.readLine(), " ");
         for (int i = 0; i < n; i++) {
-            array[i] = sc.nextInt();
+            array[i] = Integer.parseInt(token.nextToken());
         }
-        int max = 1;
-        for (int i = 0; i < n; i++) {
-            dp[i] = 1;
-            for (int j = 0; j < i; j++) {
-                if (array[j] < array[i]) {
-                    dp[i] = Math.max(dp[i], dp[j] + 1);
-                }
-            }
-            max = Math.max(max, dp[i]);
+
+        System.out.println(recursion(0, 0));
+    }
+
+    public static int recursion(int index, int beforeBest) {
+
+        if (dp[index][beforeBest] != 0) {
+            return dp[index][beforeBest];
         }
-        System.out.println(max);
+
+        if (index == n) {
+            return 0;
+        }
+
+        int max = 0;
+
+        // pick O
+        if (beforeBest < array[index]) {
+            max = Math.max(max, recursion(index + 1, array[index]) + 1);
+        }
+
+        // pick X
+        max = Math.max(max, recursion(index + 1, beforeBest));
+
+        return dp[index][beforeBest] = max;
     }
 }
