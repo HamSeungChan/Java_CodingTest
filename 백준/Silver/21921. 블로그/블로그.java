@@ -1,39 +1,41 @@
-import java.util.HashMap;
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
 
 public class Main {
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        int n = sc.nextInt();
-        int x = sc.nextInt();
+    public static void main(String[] args) throws IOException {
 
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer token = new StringTokenizer(br.readLine(), " ");
 
-        HashMap<Integer, Integer> map = new HashMap<>();
-        int[] array = new int[n];
-        int answer;
-        int sum = 0;
+        int n = Integer.parseInt(token.nextToken());
+        int k = Integer.parseInt(token.nextToken());
 
-        for (int i = 0; i < array.length; i++) {
-            array[i] = sc.nextInt();
-            if (i < x) {
-                sum += array[i];
+        int[] prefixSum = new int[n + 1];
+        token = new StringTokenizer(br.readLine(), " ");
+        for (int i = 1; i <= n; i++) {
+            prefixSum[i] = prefixSum[i - 1] + Integer.parseInt(token.nextToken());
+        }
+
+        int maxValue = 0;
+        int count = 0;
+
+        for (int i = k; i <= n; i++) {
+            int value = prefixSum[i] - prefixSum[i - k];
+            if (value > maxValue) {
+                maxValue = value;
+                count = 1;
+                continue;
+            }
+
+            if (value == maxValue) {
+                count++;
             }
         }
-        map.put(sum, map.getOrDefault(sum,0)+1);
-        answer = sum;
 
-
-        for (int i = x; i < n; i++) {
-            sum += (array[i] - array[i - x]);
-            map.put(sum, map.getOrDefault(sum,0)+1);
-            answer = Math.max(answer, sum);
-        }
-
-        if (answer == 0) {
-            System.out.println("SAD");
-        } else {
-            System.out.println(answer);
-            System.out.println(map.get(answer));
-        }
+        StringBuilder sb = new StringBuilder();
+        sb.append(maxValue).append("\n").append(count);
+        System.out.print(maxValue == 0 ? "SAD" : sb);
     }
 }
