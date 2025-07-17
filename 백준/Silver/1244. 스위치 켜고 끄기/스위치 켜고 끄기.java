@@ -4,62 +4,67 @@ import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 public class Main {
-	public static void main(String[] args) throws NumberFormatException, IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		int swCount = Integer.valueOf(br.readLine());
-		boolean[] sw = new boolean[swCount + 1];
-		StringTokenizer token = new StringTokenizer(br.readLine(), " ");
-		for (int i = 1; i <= swCount; i++) {
-			if (Integer.valueOf(token.nextToken()) == 1) {
-				sw[i] = true;
-			} else {
-				sw[i] = false;
-			}
+    public static void main(String[] args) throws IOException {
 
-		}
-		int people = Integer.valueOf(br.readLine());
-		for (int i = 0; i < people; i++) {
-			token = new StringTokenizer(br.readLine(), " ");
-			int mw = Integer.valueOf(token.nextToken());
-			int number = Integer.valueOf(token.nextToken());
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int n = Integer.parseInt(br.readLine());
 
-			if (mw == 1) {
-				for (int j = number; j < sw.length; j += number) {
-					sw[j] = !sw[j];
-				}
-			} else {
+        int[] array = new int[n + 1];
+        StringTokenizer token = new StringTokenizer(br.readLine(), " ");
+        for (int i = 1; i <= n; i++) {
+            array[i] = Integer.parseInt(token.nextToken());
+        }
 
-				int left = number;
-				int right = number;
+        int i = Integer.parseInt(br.readLine());
+        for (int j = 0; j < i; j++) {
 
-				while (true) {
+            token = new StringTokenizer(br.readLine(), " ");
+            int a = Integer.parseInt(token.nextToken());
+            int b = Integer.parseInt(token.nextToken());
 
-					if (left - 1 < 1 || right + 1 > swCount || sw[left - 1] != sw[right + 1]) {
-						break;
-					}
-					left--;
-					right++;
-				}
-				for (int j = left; j <= right; j++) {
-					sw[j] = !sw[j];
-				}
-			}
+            // 남학생은 1
+            // 여학생은 2
 
-		}
-		StringBuilder sb = new StringBuilder();
-		for(int i = 1; i< sw.length; i++) {
-			if(sw[i] == true) {
-				sb.append("1").append(" ");
-			}
-			else {
-				sb.append("0").append(" ");
-			}
-			if(i % 20 == 0) {
-				sb.append("\n");
-			}
-		}
-		
-		System.out.println(sb);
+            if (a == 1) {
+                for (int k = b; k <= n; k += b) {
+                    change(array, k);
+                }
+                continue;
+            }
 
-	}
+            change(array, b);
+            int left = b;
+            int right = b;
+
+            while (left >= 1 && right <= n && array[left] == array[right]) {
+                change(array, left);
+                change(array, right);
+                left--;
+                right++;
+            }
+        }
+
+        StringBuilder sb = new StringBuilder();
+        for (int k = 1; k <= n; k++) {
+            sb.append(array[k]).append(" ");
+            if (k % 20 == 0) {
+                sb.append("\n");
+            }
+        }
+        System.out.print(sb);
+    }
+
+    public static void change(int[] array, int index) {
+
+        if (array[index] == 1) {
+            array[index] = 0;
+            return;
+        }
+        array[index] = 1;
+    }
+
 }
+
+
+
+
